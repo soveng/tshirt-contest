@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import type { RankedSubmission } from "../hooks";
 import { Author } from "./Author";
+import { NoteContent } from "./NoteContent";
 import { RateStars } from "./RateStars";
 
 function EntryMeta({
@@ -21,11 +22,7 @@ function EntryMeta({
         {String(index + 1).padStart(2, "0")}
       </span>
       <Author pubkey={submission.pubkey} size={32} />
-      {submission.content && (
-        <p className="text-sm leading-relaxed whitespace-pre-wrap text-muted">
-          {submission.content.slice(0, 400)}
-        </p>
-      )}
+      {submission.content && <NoteContent content={submission.content} maxLength={400} />}
       {isJudge && <RateStars submission={submission} myRating={myRating} size={28} />}
     </div>
   );

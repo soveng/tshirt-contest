@@ -1,56 +1,25 @@
 import { useEffect, useState } from "react";
 import { nip19 } from "nostr-tools";
 
-import { CONTEST, JUDGE_PUBKEYS } from "../config";
+import { CONTEST } from "../config";
 import { useActiveAccount, useIsJudge, type RankedSubmission } from "../hooks";
-import { Author, AuthorAvatar } from "./Author";
+import { Author } from "./Author";
+import { NoteContent } from "./NoteContent";
 import { RateStars } from "./RateStars";
-import { StarsDisplay } from "./Stars";
 
 function JudgePanel({ item }: { item: RankedSubmission }) {
   const account = useActiveAccount();
   const isJudge = useIsJudge();
+  if (!isJudge) return null;
 
   const myRating = account ? item.score.byJudge[account.pubkey] : undefined;
 
-  // Judges rate blind: they never see other judges' votes or the tally
-  if (isJudge) {
-    return (
-      <div className="rounded-xl border border-edge bg-panel-2 p-4">
-        <div className="mb-2 text-sm text-neutral-300">
-          {myRating ? "Your rating" : "Cast your rating"}
-        </div>
-        <RateStars submission={item.submission} myRating={myRating} size={34} />
-      </div>
-    );
-  }
-
   return (
     <div className="rounded-xl border border-edge bg-panel-2 p-4">
-      <div className="mb-3 flex items-center justify-between">
-        <span className="font-mono text-[11px] tracking-wide text-muted uppercase">Judges</span>
-        {item.score.average !== null && (
-          <span className="font-mono text-xs text-neutral-300">
-            avg {item.score.average.toFixed(2)} · {item.score.count}/4
-          </span>
-        )}
+      <div className="mb-2 text-sm text-neutral-300">
+        {myRating ? "Your rating" : "Cast your rating"}
       </div>
-
-      <div className="flex flex-wrap gap-3">
-        {JUDGE_PUBKEYS.map((pubkey) => {
-          const stars = item.score.byJudge[pubkey];
-          return (
-            <div key={pubkey} className="flex items-center gap-1.5">
-              <AuthorAvatar pubkey={pubkey} size={22} />
-              {stars ? (
-                <StarsDisplay value={stars} size={12} />
-              ) : (
-                <span className="font-mono text-[10px] text-muted">—</span>
-              )}
-            </div>
-          );
-        })}
-      </div>
+      <RateStars submission={item.submission} myRating={myRating} size={34} />
     </div>
   );
 }
@@ -143,11 +112,7 @@ export function SubmissionModal({ item, onClose }: { item: RankedSubmission; onC
             </button>
           </div>
 
-          {submission.content && (
-            <p className="text-sm leading-relaxed whitespace-pre-wrap text-neutral-300">
-              {submission.content.slice(0, 600)}
-            </p>
-          )}
+          {submission.content && <NoteContent content={submission.content} maxLength={600} />}
 
           <JudgePanel item={item} />
 
