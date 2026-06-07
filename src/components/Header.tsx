@@ -7,6 +7,9 @@ import { SortMenu, type SortOption } from "./SortMenu";
 const navLink =
   "font-mono text-xs text-muted underline-offset-4 transition-colors hover:text-flame hover:underline sm:text-sm";
 
+const primaryButton =
+  "rounded-lg bg-flame px-3.5 py-1.5 text-sm font-semibold text-ink transition-transform hover:scale-105";
+
 const SOVENG_TAG_URL = "https://ants.sh/t/SovEng";
 
 function HeaderTitle({ mode }: { mode: "gallery" | "judges" }) {
@@ -19,10 +22,10 @@ function HeaderTitle({ mode }: { mode: "gallery" | "judges" }) {
   );
 }
 
-function RulesLink() {
+function SubmitDesignButton() {
   return (
-    <a href={CONTEST.brief} target="_blank" rel="noreferrer" className={navLink}>
-      Rules ↗
+    <a href={CONTEST.brief} target="_blank" rel="noreferrer" className={primaryButton}>
+      Submit Design
     </a>
   );
 }
@@ -65,19 +68,19 @@ export function Header({
         </div>
 
         <div className="flex shrink-0 items-center gap-3 sm:gap-4">
-          <RulesLink />
           {mode === "gallery" ? (
-            <Link
-              to="/judges"
-              className="rounded-lg bg-flame px-3.5 py-1.5 text-sm font-semibold text-ink transition-transform hover:scale-105"
-            >
-              Login to judge
-            </Link>
+            <>
+              <Link to="/judges" className={navLink}>
+                Login to judge
+              </Link>
+              <SubmitDesignButton />
+            </>
           ) : (
             <>
               <Link to="/" className={navLink}>
                 Gallery
               </Link>
+              <SubmitDesignButton />
               <LoginButton />
             </>
           )}
