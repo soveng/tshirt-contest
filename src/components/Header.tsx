@@ -88,7 +88,6 @@ export function Header({
               <Link to="/" className={navLink}>
                 Gallery
               </Link>
-              <SubmitDesignButton />
               <LoginButton />
             </>
           )}
