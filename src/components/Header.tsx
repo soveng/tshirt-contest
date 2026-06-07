@@ -53,13 +53,15 @@ export function Header({
     <header className="sticky top-0 z-30 border-b border-edge/70 bg-ink/80 backdrop-blur-md">
       <div className="page-shell flex items-center justify-between gap-4 py-3 sm:py-3.5">
         <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-          <Link
-            to="/"
+          <a
+            href="https://sovereignengineering.io/"
+            target="_blank"
+            rel="noreferrer"
             className="shrink-0 text-neutral-200 transition-colors hover:text-flame"
             aria-label="Sovereign Engineering"
           >
             <img src="/soveng-brandmark.svg" alt="" width={32} height={32} />
-          </Link>
+          </a>
           <HeaderTitle mode={mode} />
           <div className="flex shrink-0 items-center gap-3 border-l border-edge/70 pl-3 sm:gap-4 sm:pl-4">
             <SubmissionsLink count={submissionCount} />
