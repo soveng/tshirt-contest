@@ -15,7 +15,15 @@ function Intro({ count }: { count: number }) {
       </h1>
       <p className="mt-5 max-w-xl text-base leading-relaxed text-muted">
         Designs posted to Nostr with{" "}
-        <span className="font-mono text-neutral-200">#SovEng</span>, judged here by the four contest
+        <a
+          href="https://ants.sh/t/SovEng"
+          target="_blank"
+          rel="noreferrer"
+          className="font-mono text-neutral-200 underline-offset-4 hover:text-flame hover:underline"
+        >
+          #SovEng
+        </a>
+        , judged here by the four contest
         judges. Each judge rates from one to five stars; the average decides the ranking.
       </p>
       <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-xs text-muted">
@@ -44,8 +52,16 @@ function Empty() {
       <img src="/flame.svg" alt="" width={40} height={40} className="mx-auto mb-4 opacity-60" />
       <p className="text-neutral-300">No submissions yet.</p>
       <p className="mt-2 text-sm text-muted">
-        Post a mockup on Nostr with <span className="font-mono text-neutral-300">#SovEng</span> and it
-        will show up here.
+        Post a mockup on Nostr with{" "}
+        <a
+          href="https://ants.sh/t/SovEng"
+          target="_blank"
+          rel="noreferrer"
+          className="font-mono text-neutral-300 underline-offset-4 hover:text-flame hover:underline"
+        >
+          #SovEng
+        </a>{" "}
+        and it will show up here.
       </p>
     </div>
   );
