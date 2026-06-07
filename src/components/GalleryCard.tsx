@@ -19,6 +19,7 @@ export function GalleryCard({ submission }: { submission: Submission }) {
           hasCarousel={carousel.hasCarousel}
           showSlide={carousel.showSlide}
           imageClassName="block w-full"
+          tapToNavigate
         />
       </div>
 

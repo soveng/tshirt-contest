@@ -49,6 +49,7 @@ export function EntryCarousel({
   hasCarousel,
   showSlide,
   imageClassName,
+  tapToNavigate = false,
 }: {
   submission: Submission;
   active: number;
@@ -56,7 +57,12 @@ export function EntryCarousel({
   hasCarousel: boolean;
   showSlide: (next: number) => void;
   imageClassName: string;
+  tapToNavigate?: boolean;
 }) {
+  const count = submission.images.length;
+  const prev = () => showSlide((active - 1 + count) % count);
+  const next = () => showSlide((active + 1) % count);
+
   return (
     <>
       {image ? (
@@ -73,30 +79,55 @@ export function EntryCarousel({
         </p>
       )}
 
-      {submission.images.length > 1 && (
-        <>
-          <button
-            type="button"
-            onClick={() =>
-              showSlide((active - 1 + submission.images.length) % submission.images.length)
-            }
-            className="absolute top-1/2 left-3 -translate-y-1/2 cursor-pointer rounded-full bg-ink/70 px-3 py-2 text-neutral-200 hover:bg-ink"
-            aria-label="Previous image"
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            onClick={() => showSlide((active + 1) % submission.images.length)}
-            className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer rounded-full bg-ink/70 px-3 py-2 text-neutral-200 hover:bg-ink"
-            aria-label="Next image"
-          >
-            ›
-          </button>
-          <span className="absolute right-3 bottom-3 rounded-full bg-ink/70 px-2 py-0.5 font-mono text-[10px] text-neutral-300">
-            {active + 1}/{submission.images.length}
-          </span>
-        </>
+      {count > 1 &&
+        (tapToNavigate ? (
+          <>
+            <button
+              type="button"
+              onClick={prev}
+              aria-label="Previous image"
+              className="group/nav absolute inset-y-0 left-0 flex w-1/2 cursor-pointer items-center justify-start pl-3 focus:outline-none"
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink/70 text-lg text-neutral-100 opacity-0 transition-opacity duration-150 group-hover/nav:opacity-100">
+                ‹
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={next}
+              aria-label="Next image"
+              className="group/nav absolute inset-y-0 right-0 flex w-1/2 cursor-pointer items-center justify-end pr-3 focus:outline-none"
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink/70 text-lg text-neutral-100 opacity-0 transition-opacity duration-150 group-hover/nav:opacity-100">
+                ›
+              </span>
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={prev}
+              className="absolute top-1/2 left-3 -translate-y-1/2 cursor-pointer rounded-full bg-ink/70 px-3 py-2 text-neutral-200 hover:bg-ink"
+              aria-label="Previous image"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              onClick={next}
+              className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer rounded-full bg-ink/70 px-3 py-2 text-neutral-200 hover:bg-ink"
+              aria-label="Next image"
+            >
+              ›
+            </button>
+          </>
+        ))}
+
+      {count > 1 && (
+        <span className="pointer-events-none absolute right-3 bottom-3 rounded-full bg-ink/70 px-2 py-0.5 font-mono text-[10px] text-neutral-300">
+          {active + 1}/{count}
+        </span>
       )}
     </>
   );
