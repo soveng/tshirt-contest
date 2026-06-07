@@ -32,8 +32,14 @@ function SubmitDesignButton() {
 
 function SubmissionsLink({ count }: { count: number }) {
   return (
-    <a href={SOVENG_TAG_URL} target="_blank" rel="noreferrer" className={navLink}>
-      {count} submissions
+    <a
+      href={SOVENG_TAG_URL}
+      target="_blank"
+      rel="noreferrer"
+      className={navLink}
+      aria-label={`${count} submissions on ants.sh`}
+    >
+      {count} submissions ↗
     </a>
   );
 }
