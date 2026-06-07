@@ -74,7 +74,7 @@ export default function App() {
       <Header />
       <Intro count={ranked.length} />
 
-      <main className="page-shell max-w-4xl pb-24">
+      <main className="page-shell max-w-6xl pb-24">
         {ranked.length === 0 ? (
           <Empty />
         ) : (
