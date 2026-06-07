@@ -25,7 +25,11 @@ export function Header({ mode }: { mode: "gallery" | "judges" }) {
           </span>
         </Link>
 
-        {mode === "judges" && (
+        {mode === "gallery" ? (
+          <Link to="/judges" className={navLink}>
+            Judge Login
+          </Link>
+        ) : (
           <div className="flex shrink-0 items-center gap-3 sm:gap-4">
             <Link to="/" className={navLink}>
               Gallery

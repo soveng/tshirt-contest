@@ -49,7 +49,7 @@ export function LoginButton() {
         onClick={connect}
         className="cursor-pointer rounded-lg bg-flame px-4 py-2 text-sm font-semibold text-ink transition-transform hover:scale-105"
       >
-        Connect to judge
+        Judge Login
       </button>
       {error && <span className="font-mono text-[11px] text-flame-soft">{error}</span>}
     </div>
