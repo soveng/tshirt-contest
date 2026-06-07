@@ -1,6 +1,5 @@
 import { AccountsProvider } from "applesauce-react/providers";
 
-import { CONTEST } from "../config";
 import { useActiveAccount, useIsJudge, useRankedSubmissions } from "../hooks";
 import { accounts } from "../nostr";
 import { EmptyState } from "../components/EmptyState";
@@ -8,7 +7,7 @@ import { Header } from "../components/Header";
 import { RatingsIngest } from "../components/RatingsIngest";
 import { SubmissionCard } from "../components/SubmissionCard";
 
-function JudgesIntro({ count }: { count: number }) {
+function JudgesIntro() {
   return (
     <section className="page-shell max-w-2xl pt-8 pb-10 sm:pt-12 sm:pb-12">
       <p className="mb-3 font-mono text-xs tracking-[0.25em] text-flame uppercase">SEC-08 · Contest</p>
@@ -19,17 +18,6 @@ function JudgesIntro({ count }: { count: number }) {
         Rate each entry from one to five stars. Your votes are signed to Nostr and scoped to this
         contest; other judges&apos; ratings stay hidden from you.
       </p>
-      <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-xs text-muted">
-        <span>{count} Entries</span>
-        <a
-          href={CONTEST.brief}
-          target="_blank"
-          rel="noreferrer"
-          className="text-flame underline-offset-4 hover:underline"
-        >
-          Prizes & rules ↗
-        </a>
-      </div>
     </section>
   );
 }
@@ -50,8 +38,8 @@ function JudgesPageContent() {
   return (
     <div className="min-h-full">
       <RatingsIngest />
-      <Header mode="judges" />
-      <JudgesIntro count={ranked.length} />
+      <Header mode="judges" submissionCount={ranked.length} />
+      <JudgesIntro />
 
       <main className="page-shell max-w-6xl pb-24">
         {ranked.length === 0 ? (
