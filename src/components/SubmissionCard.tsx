@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { nip19 } from "nostr-tools";
 
 import type { RankedSubmission } from "../hooks";
 import { Author } from "./Author";
@@ -16,6 +17,8 @@ function EntryMeta({
   isJudge: boolean;
   myRating: number | undefined;
 }) {
+  const nevent = nip19.neventEncode({ id: submission.id, author: submission.pubkey });
+
   return (
     <div className="flex w-full min-w-0 flex-col items-start gap-4">
       <span className="font-mono text-xs leading-none text-flame/50 sm:text-sm">
@@ -23,6 +26,14 @@ function EntryMeta({
       </span>
       <Author pubkey={submission.pubkey} size={32} />
       {submission.content && <NoteContent content={submission.content} maxLength={400} />}
+      <a
+        href={`https://njump.me/${nevent}`}
+        target="_blank"
+        rel="noreferrer"
+        className="font-mono text-[11px] text-muted underline-offset-4 hover:text-flame hover:underline"
+      >
+        View original note ↗
+      </a>
       {isJudge && <RateStars submission={submission} myRating={myRating} size={28} />}
     </div>
   );
