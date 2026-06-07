@@ -53,7 +53,10 @@ export function Header({ mode, submissionCount }: { mode: "gallery" | "judges"; 
           <SubmissionsLink count={submissionCount} />
           <RulesLink />
           {mode === "gallery" ? (
-            <Link to="/judges" className={navLink}>
+            <Link
+              to="/judges"
+              className="rounded-lg bg-flame px-3.5 py-1.5 text-sm font-semibold text-ink transition-transform hover:scale-105"
+            >
               Login to judge
             </Link>
           ) : (
