@@ -21,9 +21,6 @@ function JudgePanel({ item }: { item: RankedSubmission }) {
           {myRating ? "Your rating" : "Cast your rating"}
         </div>
         <RateStars submission={item.submission} myRating={myRating} size={34} />
-        <p className="mt-3 font-mono text-[10px] text-muted">
-          Other judges' votes are hidden while judging.
-        </p>
       </div>
     );
   }

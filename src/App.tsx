@@ -63,15 +63,6 @@ export default function App() {
       <Header />
       <Intro count={ranked.length} />
 
-      {blind && (
-        <div className="mx-auto max-w-6xl px-5 pb-2">
-          <p className="rounded-lg border border-edge bg-panel px-4 py-2.5 font-mono text-xs text-muted">
-            Blind judging is on. Other judges' votes and the running tally are hidden so they don't
-            sway your call. You only see your own ratings.
-          </p>
-        </div>
-      )}
-
       <main className="mx-auto max-w-6xl px-5 pb-24">
         {ranked.length === 0 ? (
           <Empty />
