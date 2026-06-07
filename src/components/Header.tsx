@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+import { CONTEST } from "../config";
 import { LoginButton } from "./LoginButton";
 
 const navLink =
@@ -9,6 +10,19 @@ const titles = {
   gallery: "SEC-08 T-Shirt Gallery",
   judges: "SEC-08 T-Shirt Judging",
 } as const;
+
+function RulesLink() {
+  return (
+    <a
+      href={CONTEST.brief}
+      target="_blank"
+      rel="noreferrer"
+      className={navLink}
+    >
+      Rules ↗
+    </a>
+  );
+}
 
 export function Header({ mode }: { mode: "gallery" | "judges" }) {
   return (
@@ -28,11 +42,15 @@ export function Header({ mode }: { mode: "gallery" | "judges" }) {
         </div>
 
         {mode === "gallery" ? (
-          <Link to="/judges" className={`${navLink} shrink-0`}>
-            Login to judge
-          </Link>
+          <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+            <RulesLink />
+            <Link to="/judges" className={navLink}>
+              Login to judge
+            </Link>
+          </div>
         ) : (
           <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+            <RulesLink />
             <Link to="/" className={navLink}>
               Gallery
             </Link>
