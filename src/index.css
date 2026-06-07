@@ -11,6 +11,7 @@
 
   --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-brand: "IM Fell Double Pica", Georgia, "Times New Roman", serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
@@ -20,6 +21,26 @@ body,
   height: 100%;
 }
 
+.font-brand {
+  font-family: var(--font-brand);
+}
+
+.page-shell {
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .page-shell {
+    padding-inline: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-shell {
+    padding-inline: 3rem 2rem;
+  }
+}
+
 body {
   margin: 0;
   background-color: var(--color-ink);
@@ -27,8 +48,8 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   background-image:
-    radial-gradient(60rem 60rem at 85% -10%, rgba(247, 147, 26, 0.08), transparent 60%),
-    radial-gradient(50rem 50rem at -10% 110%, rgba(247, 147, 26, 0.05), transparent 55%);
+    radial-gradient(55rem 55rem at 0% 0%, rgba(247, 147, 26, 0.07), transparent 55%),
+    radial-gradient(40rem 40rem at 100% 100%, rgba(247, 147, 26, 0.04), transparent 50%);
   background-attachment: fixed;
 }
 

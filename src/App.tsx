@@ -8,9 +8,9 @@ import { SubmissionModal } from "./components/SubmissionModal";
 
 function Intro({ count }: { count: number }) {
   return (
-    <section className="mx-auto max-w-6xl px-5 pt-8 pb-7 sm:pt-12 sm:pb-8">
+    <section className="page-shell max-w-2xl pt-8 pb-10 sm:pt-12 sm:pb-12">
       <p className="mb-3 font-mono text-xs tracking-[0.25em] text-flame uppercase">SEC-08 · Contest</p>
-      <h1 className="max-w-3xl font-display text-4xl leading-[0.95] font-extrabold tracking-tight text-neutral-50 sm:text-5xl lg:text-6xl">
+      <h1 className="font-display text-4xl leading-[0.95] font-extrabold tracking-tight text-neutral-50 sm:text-5xl lg:text-6xl">
         T-Shirt Design <span className="text-flame">Contest</span>
       </h1>
       <p className="mt-5 max-w-xl text-base leading-relaxed text-muted">
@@ -23,8 +23,8 @@ function Intro({ count }: { count: number }) {
         >
           #SovEng
         </a>
-        , judged here by the four contest
-        judges. Each judge rates from one to five stars; the average decides the ranking.
+        , judged here by the four contest judges. Each judge rates from one to five stars; the
+        average decides the ranking.
       </p>
       <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-xs text-muted">
         <span>{count} Entries</span>
@@ -43,8 +43,8 @@ function Intro({ count }: { count: number }) {
 
 function Empty() {
   return (
-    <div className="mx-auto max-w-md px-5 py-24 text-center">
-      <img src="/flame.svg" alt="" width={40} height={40} className="mx-auto mb-4 opacity-60" />
+    <div className="page-shell max-w-xl py-24">
+      <img src="/flame.svg" alt="" width={40} height={40} className="mb-4 opacity-60" />
       <p className="text-neutral-300">No submissions yet.</p>
       <p className="mt-2 text-sm text-muted">
         Post a mockup on Nostr with{" "}
@@ -74,11 +74,11 @@ export default function App() {
       <Header />
       <Intro count={ranked.length} />
 
-      <main className="mx-auto max-w-2xl px-5 pb-24">
+      <main className="page-shell max-w-4xl pb-24">
         {ranked.length === 0 ? (
           <Empty />
         ) : (
-          <div className="flex flex-col gap-14 sm:gap-16">
+          <div className="flex flex-col gap-16 sm:gap-20">
             {ranked.map((item, index) => (
               <SubmissionCard
                 key={item.submission.id}
