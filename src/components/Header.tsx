@@ -12,8 +12,6 @@ const headerButton =
 
 const primaryButton = `${headerButton} bg-flame text-ink`;
 
-const secondaryButton = `${headerButton} border border-edge text-neutral-200 hover:border-neutral-600 hover:text-flame`;
-
 const SOVENG_TAG_URL = "https://ants.sh/t/SovEng";
 const SOVENG_APPLY_URL = "https://sovereignengineering.io/#apply";
 
@@ -91,7 +89,7 @@ export function Header({
         <div className="flex shrink-0 items-center gap-3 sm:gap-4">
           {mode === "gallery" ? (
             <>
-              <Link to="/judges" className={secondaryButton}>
+              <Link to="/judges" className={navLink}>
                 Login to judge
               </Link>
               <SubmitDesignButton />
