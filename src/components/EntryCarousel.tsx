@@ -82,13 +82,15 @@ export function EntryCarousel({
       {count > 1 &&
         (tapToNavigate ? (
           <>
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-ink/50 to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-ink/50 to-transparent" />
             <button
               type="button"
               onClick={prev}
               aria-label="Previous image"
-              className="group/nav absolute inset-y-0 left-0 flex w-1/2 cursor-pointer items-center justify-start pl-3 focus:outline-none"
+              className="group/nav absolute inset-y-0 left-0 flex w-1/2 cursor-pointer items-center justify-start pl-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-flame"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink/70 text-lg text-neutral-100 opacity-0 transition-opacity duration-150 group-hover/nav:opacity-100">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink/70 text-lg text-neutral-100 opacity-50 transition-opacity duration-150 sm:opacity-0 sm:group-hover/nav:opacity-100">
                 ‹
               </span>
             </button>
@@ -96,12 +98,25 @@ export function EntryCarousel({
               type="button"
               onClick={next}
               aria-label="Next image"
-              className="group/nav absolute inset-y-0 right-0 flex w-1/2 cursor-pointer items-center justify-end pr-3 focus:outline-none"
+              className="group/nav absolute inset-y-0 right-0 flex w-1/2 cursor-pointer items-center justify-end pr-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-flame"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink/70 text-lg text-neutral-100 opacity-0 transition-opacity duration-150 group-hover/nav:opacity-100">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink/70 text-lg text-neutral-100 opacity-50 transition-opacity duration-150 sm:opacity-0 sm:group-hover/nav:opacity-100">
                 ›
               </span>
             </button>
+            <div
+              className="pointer-events-none absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5"
+              aria-hidden="true"
+            >
+              {Array.from({ length: count }, (_, index) => (
+                <span
+                  key={index}
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    index === active ? "bg-neutral-100" : "bg-neutral-400/70"
+                  }`}
+                />
+              ))}
+            </div>
           </>
         ) : (
           <>
