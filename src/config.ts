@@ -37,6 +37,7 @@ export const ANNOUNCEMENT_ID = "2ba7d8b0dfdf550e4a883ac1ac4b1425fa6f514933010a30
 export const EXTRA_ENTRY_REFS = [
   "nevent1qqsq8tqdyx27al0pkaf85p47s6hgt33wlg202tgh4t3mq33u972s5ucs8he9g",
   "nevent1qqszg2xejhjp3gcgz5hlfd7w2hpw94d4mffj2xgwxjn3dr5lzjx83hqqqdwtd",
+  "nevent1qqspf4t46uvyvhace5d2tgulu869sedpy52undje0tmz8c5whjm5lss8z9xnw",
 ];
 
 function decodeEventId(ref: string): string {
