@@ -22,7 +22,7 @@ function NostrMention({ node }: { node: Mention }) {
         href={href}
         target="_blank"
         rel="noreferrer"
-        className="text-neutral-200 underline-offset-4 hover:text-flame hover:underline"
+        className="break-words text-neutral-200 underline-offset-4 [overflow-wrap:anywhere] hover:text-flame hover:underline"
       >
         @{name}
       </a>
@@ -37,7 +37,7 @@ function NostrMention({ node }: { node: Mention }) {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="font-mono text-neutral-300 underline-offset-4 hover:text-flame hover:underline"
+      className="break-words font-mono text-neutral-300 underline-offset-4 [overflow-wrap:anywhere] hover:text-flame hover:underline"
     >
       {label}
     </a>
@@ -51,7 +51,7 @@ const components: ComponentMap = {
       href={node.href}
       target="_blank"
       rel="noreferrer"
-      className="text-neutral-200 underline-offset-4 hover:text-flame hover:underline"
+      className="break-words text-neutral-200 underline-offset-4 [overflow-wrap:anywhere] hover:text-flame hover:underline"
     >
       {node.value}
     </a>
@@ -65,7 +65,7 @@ const components: ComponentMap = {
         href={href}
         target="_blank"
         rel="noreferrer"
-        className="font-mono text-neutral-200 underline-offset-4 hover:text-flame hover:underline"
+        className="break-words font-mono text-neutral-200 underline-offset-4 [overflow-wrap:anywhere] hover:text-flame hover:underline"
       >
         #{tag}
       </a>
@@ -81,5 +81,9 @@ export function NoteContent({ content, maxLength }: { content: string; maxLength
 
   if (!content) return null;
 
-  return <div className="text-sm leading-relaxed whitespace-pre-wrap text-muted">{rendered}</div>;
+  return (
+    <div className="min-w-0 max-w-full text-sm leading-relaxed break-words whitespace-pre-wrap text-muted [overflow-wrap:anywhere]">
+      {rendered}
+    </div>
+  );
 }

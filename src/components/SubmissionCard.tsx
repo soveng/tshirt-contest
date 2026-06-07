@@ -17,7 +17,7 @@ function EntryMeta({
   myRating: number | undefined;
 }) {
   return (
-    <div className="flex flex-col items-start gap-4">
+    <div className="flex w-full min-w-0 flex-col items-start gap-4">
       <span className="font-mono text-xs leading-none text-flame/50 sm:text-sm">
         {String(index + 1).padStart(2, "0")}
       </span>
@@ -50,7 +50,7 @@ export function SubmissionCard({
   return (
     <article
       style={{ animationDelay: `${Math.min(index, 12) * 45}ms` }}
-      className="animate-[pop_0.4s_ease-out_both] lg:grid lg:grid-cols-[minmax(0,1fr)_min(17rem,32%)] lg:items-start lg:gap-8 xl:grid-cols-[minmax(0,1fr)_min(20rem,28%)] xl:gap-10"
+      className="min-w-0 animate-[pop_0.4s_ease-out_both] lg:grid lg:grid-cols-[minmax(0,1fr)_min(17rem,32%)] lg:items-start lg:gap-8 xl:grid-cols-[minmax(0,1fr)_min(20rem,28%)] xl:gap-10"
     >
       <div className="relative min-w-0 overflow-hidden rounded-xl border border-edge bg-panel-2">
         {image ? (
@@ -68,7 +68,7 @@ export function SubmissionCard({
             />
           </button>
         ) : (
-          <p className="px-6 py-16 text-left text-sm text-muted">
+          <p className="px-6 py-16 text-left text-sm break-words text-muted [overflow-wrap:anywhere]">
             {submission.content.slice(0, 280) || "No preview"}
           </p>
         )}
@@ -100,7 +100,7 @@ export function SubmissionCard({
         )}
       </div>
 
-      <aside className="mt-4 lg:sticky lg:top-20 lg:mt-0 lg:pt-1">
+      <aside className="mt-4 min-w-0 lg:sticky lg:top-20 lg:mt-0 lg:pt-1">
         <EntryMeta index={index} submission={submission} isJudge={isJudge} myRating={myRating} />
       </aside>
     </article>

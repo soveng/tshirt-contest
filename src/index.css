@@ -21,6 +21,11 @@ body,
   height: 100%;
 }
 
+html,
+body {
+  overflow-x: clip;
+}
+
 .font-brand {
   font-family: var(--font-brand);
 }

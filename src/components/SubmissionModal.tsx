@@ -71,7 +71,7 @@ export function SubmissionModal({ item, onClose }: { item: RankedSubmission; onC
               className="max-h-[45vh] w-full object-contain md:max-h-[90vh]"
             />
           ) : (
-            <p className="p-8 text-center text-sm whitespace-pre-wrap text-muted">
+            <p className="p-8 text-center text-sm break-words whitespace-pre-wrap text-muted [overflow-wrap:anywhere]">
               {submission.content || "No image in this entry"}
             </p>
           )}
@@ -100,7 +100,7 @@ export function SubmissionModal({ item, onClose }: { item: RankedSubmission; onC
           )}
         </div>
 
-        <div className="flex flex-col gap-4 overflow-y-auto p-5 md:w-2/5">
+        <div className="flex min-w-0 flex-col gap-4 overflow-y-auto p-5 md:w-2/5">
           <div className="flex items-start justify-between gap-3">
             <Author pubkey={submission.pubkey} size={36} />
             <button
