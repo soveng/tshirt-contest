@@ -32,7 +32,7 @@ function EntryMeta({
         rel="noreferrer"
         className="font-mono text-[11px] text-muted underline-offset-4 hover:text-flame hover:underline"
       >
-        View original note ↗
+        njump ↗
       </a>
       {isJudge && <RateStars submission={submission} myRating={myRating} size={28} />}
     </div>
