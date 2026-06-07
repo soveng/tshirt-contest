@@ -20,8 +20,8 @@ export function LoginButton() {
 
   if (account) {
     return (
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
+      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+        <div className="flex min-w-0 max-w-[42vw] items-center gap-2 sm:max-w-none">
           <Author pubkey={account.pubkey} size={26} />
           <span
             className={`hidden rounded-full px-2 py-0.5 font-mono text-[10px] tracking-wide uppercase sm:inline ${
@@ -34,7 +34,7 @@ export function LoginButton() {
         <button
           type="button"
           onClick={logout}
-          className="cursor-pointer rounded-lg border border-edge px-3 py-1.5 text-sm text-muted transition-colors hover:border-neutral-600 hover:text-neutral-200"
+          className="shrink-0 cursor-pointer rounded-lg border border-edge px-3 py-1.5 text-sm text-muted transition-colors hover:border-neutral-600 hover:text-neutral-200"
         >
           Sign out
         </button>

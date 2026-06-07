@@ -2,46 +2,28 @@ import { useEffect, useState } from "react";
 import { nip19 } from "nostr-tools";
 
 import { CONTEST, JUDGE_PUBKEYS } from "../config";
-import { publishRating } from "../ratings";
 import { useActiveAccount, useIsJudge, type RankedSubmission } from "../hooks";
 import { Author, AuthorAvatar } from "./Author";
-import { StarsDisplay, StarsInput } from "./Stars";
+import { RateStars } from "./RateStars";
+import { StarsDisplay } from "./Stars";
 
 function JudgePanel({ item }: { item: RankedSubmission }) {
   const account = useActiveAccount();
   const isJudge = useIsJudge();
-  const [pending, setPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const myRating = account ? item.score.byJudge[account.pubkey] : undefined;
-
-  async function rate(stars: number) {
-    setPending(true);
-    setError(null);
-    try {
-      await publishRating(item.submission, stars);
-    } catch {
-      setError("Could not publish rating");
-    } finally {
-      setPending(false);
-    }
-  }
 
   // Judges rate blind: they never see other judges' votes or the tally
   if (isJudge) {
     return (
       <div className="rounded-xl border border-edge bg-panel-2 p-4">
-        <div className="mb-2 flex items-center justify-between">
-          <span className="text-sm text-neutral-300">
-            {myRating ? "Your rating" : "Cast your rating"}
-          </span>
-          {pending && <span className="font-mono text-[11px] text-flame-soft">signing…</span>}
+        <div className="mb-2 text-sm text-neutral-300">
+          {myRating ? "Your rating" : "Cast your rating"}
         </div>
-        <StarsInput value={myRating ?? 0} onRate={rate} disabled={pending} />
+        <RateStars submission={item.submission} myRating={myRating} size={34} />
         <p className="mt-3 font-mono text-[10px] text-muted">
           Other judges' votes are hidden while judging.
         </p>
-        {error && <p className="mt-2 font-mono text-[11px] text-flame-soft">{error}</p>}
       </div>
     );
   }

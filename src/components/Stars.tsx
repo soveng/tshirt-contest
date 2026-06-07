@@ -40,17 +40,22 @@ export function StarsInput({
   onRate,
   disabled,
   size = 30,
+  spread = false,
 }: {
   value: number;
   onRate: (stars: number) => void;
   disabled?: boolean;
   size?: number;
+  spread?: boolean;
 }) {
   const [hover, setHover] = useState(0);
   const shown = hover || value;
 
   return (
-    <div className="flex items-center gap-1" onMouseLeave={() => setHover(0)}>
+    <div
+      className={`flex items-center ${spread ? "w-full justify-between" : "gap-1"}`}
+      onMouseLeave={() => setHover(0)}
+    >
       {Array.from({ length: CONTEST.maxRating }, (_, i) => {
         const star = i + 1;
         return (
@@ -60,7 +65,7 @@ export function StarsInput({
             disabled={disabled}
             onMouseEnter={() => setHover(star)}
             onClick={() => onRate(star)}
-            className="cursor-pointer rounded-md p-0.5 transition-transform hover:scale-115 disabled:cursor-not-allowed disabled:opacity-50"
+            className="cursor-pointer rounded-md p-1 transition-transform hover:scale-115 disabled:cursor-not-allowed disabled:opacity-50"
             aria-label={`${star} ${star === 1 ? "star" : "stars"}`}
           >
             <Star size={size} fill={shown >= star ? 1 : 0} />

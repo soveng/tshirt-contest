@@ -8,9 +8,9 @@ import { SubmissionModal } from "./components/SubmissionModal";
 
 function Intro({ count }: { count: number }) {
   return (
-    <section className="mx-auto max-w-6xl px-5 pt-12 pb-8">
+    <section className="mx-auto max-w-6xl px-5 pt-8 pb-7 sm:pt-12 sm:pb-8">
       <p className="mb-3 font-mono text-xs tracking-[0.25em] text-flame uppercase">SEC-08 · Contest</p>
-      <h1 className="max-w-3xl font-display text-5xl leading-[0.95] font-extrabold tracking-tight text-neutral-50 sm:text-6xl">
+      <h1 className="max-w-3xl font-display text-4xl leading-[0.95] font-extrabold tracking-tight text-neutral-50 sm:text-5xl lg:text-6xl">
         T-Shirt Design <span className="text-flame">Contest</span>
       </h1>
       <p className="mt-5 max-w-xl text-base leading-relaxed text-muted">

@@ -1,5 +1,6 @@
 import type { RankedSubmission } from "../hooks";
 import { Author } from "./Author";
+import { RateStars } from "./RateStars";
 import { StarsDisplay } from "./Stars";
 
 function RankChip({ rank, rated }: { rank: number; rated: boolean }) {
@@ -33,13 +34,16 @@ export function SubmissionCard({
   const myRating = viewerPubkey ? score.byJudge[viewerPubkey] : undefined;
 
   return (
-    <button
-      type="button"
-      onClick={onOpen}
+    <div
       style={{ animationDelay: `${Math.min(index, 12) * 45}ms` }}
-      className="group flex animate-[pop_0.4s_ease-out_both] flex-col overflow-hidden rounded-xl border border-edge bg-panel text-left transition-all duration-200 hover:-translate-y-1 hover:border-flame/60 hover:shadow-[0_12px_40px_-12px_rgba(247,147,26,0.35)]"
+      className="group flex animate-[pop_0.4s_ease-out_both] flex-col overflow-hidden rounded-xl border border-edge bg-panel transition-all duration-200 hover:border-flame/60 hover:shadow-[0_12px_40px_-12px_rgba(247,147,26,0.35)] sm:hover:-translate-y-1"
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-panel-2">
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label="Open entry"
+        className="relative block aspect-[4/5] w-full cursor-pointer overflow-hidden bg-panel-2"
+      >
         {submission.images.length > 0 ? (
           <img
             src={submission.images[0]}
@@ -62,32 +66,30 @@ export function SubmissionCard({
             +{submission.images.length - 1}
           </span>
         )}
-      </div>
+      </button>
 
-      <div className="flex items-center justify-between gap-2 px-3 py-2.5">
-        <Author pubkey={submission.pubkey} size={26} />
-        <div className="flex shrink-0 flex-col items-end">
-          {blind ? (
-            myRating ? (
-              <>
-                <StarsDisplay value={myRating} size={13} />
-                <span className="font-mono text-[10px] text-muted">your rating</span>
-              </>
+      <div className="flex flex-col gap-2 px-3 py-2.5">
+        <div className="flex items-center justify-between gap-2">
+          <Author pubkey={submission.pubkey} size={26} />
+          {!blind &&
+            (rated ? (
+              <div className="flex shrink-0 flex-col items-end">
+                <StarsDisplay value={score.average!} size={13} />
+                <span className="font-mono text-[10px] text-muted">
+                  {score.average!.toFixed(1)} · {score.count}/4
+                </span>
+              </div>
             ) : (
-              <span className="font-mono text-[10px] text-flame-soft">rate</span>
-            )
-          ) : rated ? (
-            <>
-              <StarsDisplay value={score.average!} size={13} />
-              <span className="font-mono text-[10px] text-muted">
-                {score.average!.toFixed(1)} · {score.count}/4
-              </span>
-            </>
-          ) : (
-            <span className="font-mono text-[10px] text-muted">unrated</span>
-          )}
+              <span className="shrink-0 font-mono text-[10px] text-muted">unrated</span>
+            ))}
         </div>
+
+        {blind && (
+          <div className="border-t border-edge/60 pt-2">
+            <RateStars submission={submission} myRating={myRating} size={22} spread />
+          </div>
+        )}
       </div>
-    </button>
+    </div>
   );
 }
