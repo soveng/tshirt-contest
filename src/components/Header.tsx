@@ -11,18 +11,15 @@ export function Header({ mode }: { mode: "gallery" | "judges" }) {
       <div className="page-shell flex items-center justify-between gap-3 py-3 sm:py-3.5">
         <Link
           to="/"
-          className="flex min-w-0 items-center gap-3 text-neutral-200 transition-colors hover:text-flame"
+          className="shrink-0 text-neutral-200 transition-colors hover:text-flame"
+          aria-label="Sovereign Engineering"
         >
           <img
             src="/soveng-brandmark.svg"
-            alt="Sovereign Engineering"
+            alt=""
             width={32}
             height={32}
-            className="shrink-0"
           />
-          <span className="font-brand truncate text-xs font-bold tracking-wide uppercase sm:text-sm">
-            Sovereign Engineering
-          </span>
         </Link>
 
         {mode === "gallery" ? (
