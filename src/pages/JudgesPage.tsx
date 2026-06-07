@@ -1,7 +1,11 @@
+import { AccountsProvider } from "applesauce-react/providers";
+
 import { CONTEST } from "../config";
 import { useActiveAccount, useIsJudge, useRankedSubmissions } from "../hooks";
+import { accounts } from "../nostr";
 import { EmptyState } from "../components/EmptyState";
 import { Header } from "../components/Header";
+import { RatingsIngest } from "../components/RatingsIngest";
 import { SubmissionCard } from "../components/SubmissionCard";
 
 function JudgesIntro({ count }: { count: number }) {
@@ -31,12 +35,21 @@ function JudgesIntro({ count }: { count: number }) {
 }
 
 export function JudgesPage() {
+  return (
+    <AccountsProvider manager={accounts}>
+      <JudgesPageContent />
+    </AccountsProvider>
+  );
+}
+
+function JudgesPageContent() {
   const account = useActiveAccount();
   const isJudge = useIsJudge();
   const ranked = useRankedSubmissions();
 
   return (
     <div className="min-h-full">
+      <RatingsIngest />
       <Header mode="judges" />
       <JudgesIntro count={ranked.length} />
 
@@ -48,7 +61,6 @@ export function JudgesPage() {
             {ranked.map((item, index) => (
               <SubmissionCard
                 key={item.submission.id}
-                variant="judge"
                 item={item}
                 index={index}
                 isJudge={isJudge}

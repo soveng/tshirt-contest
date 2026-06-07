@@ -73,12 +73,11 @@ export function logout(): void {
 }
 
 /**
- * Subscribe to the contest data and pipe it into the store:
+ * Subscribe to contest entries and pipe them into the store:
  * - acknowledgement notes from the official account confirm which notes are entries
  * - each acknowledged entry note is loaded on demand
- * - judge ratings (NIP-32 labels) are loaded for scoring
  */
-export function startIngest(): () => void {
+export function startEntryIngest(): () => void {
   const requested = new Set<string>();
   const entryLoaders = new Map<string, { unsubscribe(): void }>();
 
@@ -104,6 +103,14 @@ export function startIngest(): () => void {
       if (id) loadEntry(id);
     });
 
+  return () => {
+    acks.unsubscribe();
+    for (const sub of entryLoaders.values()) sub.unsubscribe();
+  };
+}
+
+/** Load judge rating events — only needed on /judges, not the public gallery. */
+export function startRatingsIngest(): () => void {
   const ratings = pool
     .subscription(RELAYS, {
       kinds: [1985],
@@ -113,9 +120,5 @@ export function startIngest(): () => void {
     .pipe(onlyEvents())
     .subscribe((event) => eventStore.add(event));
 
-  return () => {
-    acks.unsubscribe();
-    ratings.unsubscribe();
-    for (const sub of entryLoaders.values()) sub.unsubscribe();
-  };
+  return () => ratings.unsubscribe();
 }

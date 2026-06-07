@@ -25,20 +25,14 @@ export function Header({ mode }: { mode: "gallery" | "judges" }) {
           </span>
         </Link>
 
-        <div className="flex shrink-0 items-center gap-3 sm:gap-4">
-          {mode === "gallery" ? (
-            <Link to="/judges" className={navLink}>
-              Judges
+        {mode === "judges" && (
+          <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+            <Link to="/" className={navLink}>
+              Gallery
             </Link>
-          ) : (
-            <>
-              <Link to="/" className={navLink}>
-                Gallery
-              </Link>
-              <LoginButton />
-            </>
-          )}
-        </div>
+            <LoginButton />
+          </div>
+        )}
       </div>
     </header>
   );

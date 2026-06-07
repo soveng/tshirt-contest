@@ -35,12 +35,10 @@ export function useProfile(pubkey: string | undefined) {
   return use$(() => (pubkey ? eventStore.profile(pubkey) : undefined), [pubkey]);
 }
 
-/** All confirmed entries with judge scores. Entries are shown newest-first so the feed doesn't leak results. */
-export function useRankedSubmissions(): RankedSubmission[] {
-  // Acknowledgement notes from the official account confirm which notes are entries
+function useEntryIds(): string[] {
   const acks = use$(() => eventStore.timeline({ kinds: [1], authors: [OFFICIAL_PUBKEY] }), []);
 
-  const entryIds = useMemo(() => {
+  return useMemo(() => {
     const ids = new Set<string>(EXTRA_ENTRY_IDS);
     for (const ack of acks ?? []) {
       const id = acknowledgedSubmissionId(ack);
@@ -48,12 +46,28 @@ export function useRankedSubmissions(): RankedSubmission[] {
     }
     return [...ids];
   }, [acks]);
+}
 
-  // The entry notes themselves, loaded on demand by the ingest layer
+/** Confirmed contest entries, newest first. No ratings — for the public gallery. */
+export function useSubmissions(): Submission[] {
+  const entryIds = useEntryIds();
+
   const notes = use$(
     () => (entryIds.length ? eventStore.timeline({ ids: entryIds }) : undefined),
     [entryIds.join(",")],
   );
+
+  return useMemo(() => {
+    return (notes ?? [])
+      .filter((note) => note.pubkey !== OFFICIAL_PUBKEY)
+      .map(toSubmission)
+      .sort((a, b) => b.createdAt - a.createdAt);
+  }, [notes]);
+}
+
+/** Entries with judge scores for the judging page. */
+export function useRankedSubmissions(): RankedSubmission[] {
+  const submissions = useSubmissions();
 
   const ratings = use$(
     () => eventStore.timeline({ kinds: [1985], authors: JUDGE_PUBKEYS, "#L": [RATING_NAMESPACE] }),
@@ -61,17 +75,13 @@ export function useRankedSubmissions(): RankedSubmission[] {
   );
 
   return useMemo(() => {
-    const submissions: Submission[] = (notes ?? [])
-      .filter((note) => note.pubkey !== OFFICIAL_PUBKEY)
-      .map(toSubmission);
-
     const scores = scoreSubmissions(ratings ?? []);
     const empty: SubmissionScore = { average: null, count: 0, byJudge: {} };
 
-    const ordered = submissions
-      .map((submission) => ({ submission, score: scores.get(submission.id) ?? empty }))
-      .sort((a, b) => b.submission.createdAt - a.submission.createdAt);
-
-    return ordered.map((item, index) => ({ ...item, rank: index + 1 }));
-  }, [notes, ratings]);
+    return submissions.map((submission, index) => ({
+      submission,
+      score: scores.get(submission.id) ?? empty,
+      rank: index + 1,
+    }));
+  }, [submissions, ratings]);
 }
