@@ -1,10 +1,7 @@
-import { useState } from "react";
-
 import { CONTEST } from "./config";
 import { useActiveAccount, useIsJudge, useRankedSubmissions } from "./hooks";
 import { Header } from "./components/Header";
 import { SubmissionCard } from "./components/SubmissionCard";
-import { SubmissionModal } from "./components/SubmissionModal";
 
 function Intro({ count }: { count: number }) {
   return (
@@ -66,8 +63,6 @@ export default function App() {
   const account = useActiveAccount();
   const isJudge = useIsJudge();
   const ranked = useRankedSubmissions();
-  const [openId, setOpenId] = useState<string | null>(null);
-  const open = ranked.find((r) => r.submission.id === openId) ?? null;
 
   return (
     <div className="min-h-full">
@@ -86,14 +81,11 @@ export default function App() {
                 index={index}
                 isJudge={isJudge}
                 viewerPubkey={account?.pubkey}
-                onOpen={() => setOpenId(item.submission.id)}
               />
             ))}
           </div>
         )}
       </main>
-
-      {open && <SubmissionModal item={open} onClose={() => setOpenId(null)} />}
     </div>
   );
 }

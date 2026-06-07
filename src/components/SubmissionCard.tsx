@@ -33,13 +33,11 @@ export function SubmissionCard({
   index,
   isJudge,
   viewerPubkey,
-  onOpen,
 }: {
   item: RankedSubmission;
   index: number;
   isJudge: boolean;
   viewerPubkey?: string;
-  onOpen: () => void;
 }) {
   const { submission, score } = item;
   const myRating = viewerPubkey ? score.byJudge[viewerPubkey] : undefined;
@@ -54,19 +52,12 @@ export function SubmissionCard({
     >
       <div className="relative min-w-0 overflow-hidden rounded-xl border border-edge bg-panel-2">
         {image ? (
-          <button
-            type="button"
-            onClick={onOpen}
-            aria-label="Open entry"
-            className="block w-full cursor-pointer text-left"
-          >
-            <img
-              src={image}
-              alt=""
-              loading="lazy"
-              className="max-h-[min(72vh,720px)] w-full object-contain object-left lg:max-h-[min(80vh,840px)]"
-            />
-          </button>
+          <img
+            src={image}
+            alt=""
+            loading="lazy"
+            className="max-h-[min(72vh,720px)] w-full object-contain object-left lg:max-h-[min(80vh,840px)]"
+          />
         ) : (
           <p className="px-6 py-16 text-left text-sm break-words text-muted [overflow-wrap:anywhere]">
             {submission.content.slice(0, 280) || "No preview"}
