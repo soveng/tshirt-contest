@@ -29,7 +29,28 @@ createEventLoaderForStore(eventStore, pool, {
 export const accounts = new AccountManager();
 registerCommonAccountTypes(accounts);
 
-const ACTIVE_KEY = "soveng:active-extension";
+const ACCOUNTS_KEY = "soveng:accounts";
+const ACTIVE_KEY = "soveng:active";
+
+// Restore saved accounts and the active one (extension signers re-bind to window.nostr lazily)
+try {
+  const stored = localStorage.getItem(ACCOUNTS_KEY);
+  if (stored) accounts.fromJSON(JSON.parse(stored));
+  const activeId = localStorage.getItem(ACTIVE_KEY);
+  if (activeId) accounts.setActive(activeId);
+} catch {
+  localStorage.removeItem(ACCOUNTS_KEY);
+  localStorage.removeItem(ACTIVE_KEY);
+}
+
+// Persist accounts and the active selection whenever they change
+accounts.accounts$.subscribe(() =>
+  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts.toJSON())),
+);
+accounts.active$.subscribe((account) => {
+  if (account) localStorage.setItem(ACTIVE_KEY, account.id);
+  else localStorage.removeItem(ACTIVE_KEY);
+});
 
 /** Log in with a NIP-07 browser extension and make it the active account */
 export async function loginWithExtension(): Promise<void> {
@@ -41,7 +62,6 @@ export async function loginWithExtension(): Promise<void> {
     accounts.addAccount(account);
     accounts.setActive(account);
   }
-  localStorage.setItem(ACTIVE_KEY, "1");
 }
 
 /** Drop the active account */
@@ -49,18 +69,6 @@ export function logout(): void {
   const active = accounts.active;
   accounts.clearActive();
   if (active) accounts.removeAccount(active);
-  localStorage.removeItem(ACTIVE_KEY);
-}
-
-/** Restore an extension login on page load if one was used before */
-export async function restoreSession(): Promise<void> {
-  if (!localStorage.getItem(ACTIVE_KEY)) return;
-  if (typeof window === "undefined" || !("nostr" in window)) return;
-  try {
-    await loginWithExtension();
-  } catch {
-    localStorage.removeItem(ACTIVE_KEY);
-  }
 }
 
 /**

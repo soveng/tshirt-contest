@@ -4,10 +4,9 @@ import { AccountsProvider, EventStoreProvider } from "applesauce-react/providers
 
 import "./index.css";
 import App from "./App.tsx";
-import { accounts, eventStore, restoreSession, startIngest } from "./nostr";
+import { accounts, eventStore, startIngest } from "./nostr";
 
 startIngest();
-void restoreSession();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
