@@ -34,7 +34,7 @@ export function LoginButton() {
         <button
           type="button"
           onClick={logout}
-          className="shrink-0 cursor-pointer rounded-lg border border-edge px-3 py-1.5 text-sm text-muted transition-colors hover:border-neutral-600 hover:text-neutral-200"
+          className="inline-flex shrink-0 cursor-pointer items-center rounded-lg border border-edge px-3.5 py-2 text-sm leading-none text-muted transition-colors hover:border-neutral-600 hover:text-neutral-200"
         >
           Sign out
         </button>

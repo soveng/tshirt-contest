@@ -8,7 +8,7 @@ const navLink =
   "font-mono text-xs text-muted underline-offset-4 transition-colors hover:text-flame hover:underline sm:text-sm";
 
 const headerButton =
-  "inline-flex items-center rounded-lg px-3.5 py-1.5 text-sm font-semibold leading-none transition-transform hover:scale-105";
+  "inline-flex items-center rounded-lg px-3.5 py-2 text-sm font-semibold leading-none transition-transform hover:scale-105";
 
 const primaryButton = `${headerButton} bg-flame text-ink`;
 
