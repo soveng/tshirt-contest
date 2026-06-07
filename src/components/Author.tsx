@@ -23,7 +23,11 @@ export function Author({ pubkey, size = 28 }: { pubkey: string; size?: number })
         className="shrink-0 rounded-full border border-edge object-cover"
         style={{ width: size, height: size }}
       />
-      <span className="truncate text-sm font-medium text-neutral-200">{name}</span>
+      <span
+        className={`truncate font-medium text-neutral-200 ${size <= 22 ? "text-xs" : "text-sm"}`}
+      >
+        {name}
+      </span>
     </div>
   );
 }
