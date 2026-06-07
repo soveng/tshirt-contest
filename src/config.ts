@@ -25,6 +25,25 @@ export const OFFICIAL_NPUB =
 /** The contest announcement note; official replies thread off it but it isn't an entry */
 export const ANNOUNCEMENT_ID = "2ba7d8b0dfdf550e4a883ac1ac4b1425fa6f514933010a30c1b4e9c79bc536f0";
 
+/**
+ * Entries that should be included even without an official acknowledgement
+ * (e.g. clear submissions the official account hasn't replied to). Add the
+ * note as a nevent or note id.
+ */
+export const EXTRA_ENTRY_REFS = [
+  "nevent1qqsq8tqdyx27al0pkaf85p47s6hgt33wlg202tgh4t3mq33u972s5ucs8he9g",
+  "nevent1qqszg2xejhjp3gcgz5hlfd7w2hpw94d4mffj2xgwxjn3dr5lzjx83hqqqdwtd",
+];
+
+function decodeEventId(ref: string): string {
+  const decoded = nip19.decode(ref);
+  if (decoded.type === "nevent") return decoded.data.id;
+  if (decoded.type === "note") return decoded.data;
+  throw new Error(`Not an event reference: ${ref}`);
+}
+
+export const EXTRA_ENTRY_IDS = EXTRA_ENTRY_REFS.map(decodeEventId);
+
 /** Only look at activity from when the contest opened */
 export const CONTEST_SINCE = Math.floor(new Date("2026-05-26T00:00:00Z").getTime() / 1000);
 

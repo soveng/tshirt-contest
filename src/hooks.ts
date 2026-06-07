@@ -2,7 +2,13 @@ import { useMemo } from "react";
 import { use$ } from "applesauce-react/hooks";
 
 import { accounts, eventStore } from "./nostr";
-import { JUDGE_PUBKEYS, JUDGE_SET, OFFICIAL_PUBKEY, RATING_NAMESPACE } from "./config";
+import {
+  EXTRA_ENTRY_IDS,
+  JUDGE_PUBKEYS,
+  JUDGE_SET,
+  OFFICIAL_PUBKEY,
+  RATING_NAMESPACE,
+} from "./config";
 import { scoreSubmissions } from "./ratings";
 import { acknowledgedSubmissionId, toSubmission } from "./submissions";
 import type { Submission, SubmissionScore } from "./types";
@@ -39,7 +45,7 @@ export function useRankedSubmissions(blind = false): RankedSubmission[] {
   const acks = use$(() => eventStore.timeline({ kinds: [1], authors: [OFFICIAL_PUBKEY] }), []);
 
   const entryIds = useMemo(() => {
-    const ids = new Set<string>();
+    const ids = new Set<string>(EXTRA_ENTRY_IDS);
     for (const ack of acks ?? []) {
       const id = acknowledgedSubmissionId(ack);
       if (id) ids.add(id);

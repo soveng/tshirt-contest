@@ -6,6 +6,7 @@ import { ExtensionAccount, registerCommonAccountTypes } from "applesauce-account
 
 import {
   CONTEST_SINCE,
+  EXTRA_ENTRY_IDS,
   JUDGE_PUBKEYS,
   LOOKUP_RELAYS,
   OFFICIAL_PUBKEY,
@@ -81,19 +82,26 @@ export function startIngest(): () => void {
   const requested = new Set<string>();
   const entryLoaders = new Map<string, { unsubscribe(): void }>();
 
+  const loadEntry = (id: string) => {
+    if (requested.has(id)) return;
+    requested.add(id);
+    entryLoaders.set(
+      id,
+      pool.request(RELAYS, { ids: [id] }).subscribe((entry) => eventStore.add(entry)),
+    );
+  };
+
+  // Always load the manually allowlisted entries
+  for (const id of EXTRA_ENTRY_IDS) loadEntry(id);
+
   const acks = pool
     .subscription(RELAYS, { kinds: [1], authors: [OFFICIAL_PUBKEY], since: CONTEST_SINCE })
     .pipe(onlyEvents())
     .subscribe((event) => {
       eventStore.add(event);
       const id = acknowledgedSubmissionId(event);
-      if (!id || requested.has(id)) return;
-      requested.add(id);
       // Fetch the entry note from the contest relays (it isn't on the lookup relays)
-      entryLoaders.set(
-        id,
-        pool.request(RELAYS, { ids: [id] }).subscribe((entry) => eventStore.add(entry)),
-      );
+      if (id) loadEntry(id);
     });
 
   const ratings = pool
