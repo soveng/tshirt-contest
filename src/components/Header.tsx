@@ -12,11 +12,11 @@ function HeaderTitle({ mode }: { mode: "gallery" | "judges" }) {
   const label = mode === "gallery" ? "Gallery" : "Judging";
 
   return (
-    <div className="flex min-w-0 items-baseline gap-2 sm:gap-2.5">
-      <span className="shrink-0 font-mono text-[10px] tracking-[0.24em] text-flame/75 sm:text-[11px]">
+    <div className="flex min-w-0 items-center gap-2.5">
+      <span className="shrink-0 rounded border border-flame/30 bg-flame/10 px-1.5 py-0.5 font-mono text-[10px] font-medium tracking-[0.18em] text-flame">
         SEC-08
       </span>
-      <span className="truncate font-brand text-[1.05rem] leading-none text-neutral-50 sm:text-[1.35rem]">
+      <span className="truncate font-display text-base font-bold tracking-tight text-neutral-50 sm:text-lg">
         T-Shirt <span className="text-flame">{label}</span>
       </span>
     </div>
@@ -51,9 +51,7 @@ export function Header({ mode, submissionCount }: { mode: "gallery" | "judges"; 
           >
             <img src="/soveng-brandmark.svg" alt="" width={32} height={32} />
           </Link>
-          <span className="truncate font-display text-sm font-extrabold tracking-tight text-neutral-100 sm:text-base">
-            {titles[mode]}
-          </span>
+          <HeaderTitle mode={mode} />
         </div>
 
         <div className="flex shrink-0 items-center gap-3 sm:gap-4">
