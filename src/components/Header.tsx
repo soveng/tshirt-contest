@@ -83,8 +83,8 @@ export function Header({
           </a>
           <HeaderTitle mode={mode} />
           <div className="flex shrink-0 items-center gap-3 border-l border-edge/70 pl-3 sm:gap-4 sm:pl-4">
-            <SubmissionsLink count={submissionCount} />
             {sort && onSortChange && <SortMenu value={sort} onChange={onSortChange} />}
+            <SubmissionsLink count={submissionCount} />
           </div>
         </div>
 
