@@ -11,21 +11,28 @@ export function formatSubmissionDate(unixSeconds: number): string {
   }).format(new Date(unixSeconds * 1000));
 }
 
-export function EntryDateLink({ submission }: { submission: Submission }) {
+export function EntryDateLink({
+  submission,
+  compact = false,
+}: {
+  submission: Submission;
+  compact?: boolean;
+}) {
   const nevent = nip19.neventEncode({ id: submission.id, author: submission.pubkey });
 
   return (
-    <div className="flex items-baseline gap-1.5 font-mono text-xs leading-none text-flame/50 sm:text-sm">
-      <span>{formatSubmissionDate(submission.createdAt)}</span>
-      <a
-        href={`https://njump.me/${nevent}`}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="View on njump"
-        className="text-muted transition-colors hover:text-flame"
-      >
-        ↗
-      </a>
-    </div>
+    <a
+      href={`https://njump.me/${nevent}`}
+      target="_blank"
+      rel="noreferrer"
+      className={
+        compact
+          ? "inline-flex shrink-0 items-center gap-1 font-mono text-[10px] text-muted transition-colors hover:text-flame"
+          : "inline-flex items-baseline gap-1 font-mono text-xs leading-none text-flame/50 transition-colors hover:text-flame sm:text-sm"
+      }
+    >
+      {formatSubmissionDate(submission.createdAt)}
+      <span aria-hidden>↗</span>
+    </a>
   );
 }
