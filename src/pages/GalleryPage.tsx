@@ -40,7 +40,7 @@ export function GalleryPage() {
         {submissions.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+          <div className="mx-auto max-w-6xl columns-1 gap-5 sm:columns-2">
             {submissions.map((submission) => (
               <GalleryCard key={submission.id} submission={submission} />
             ))}

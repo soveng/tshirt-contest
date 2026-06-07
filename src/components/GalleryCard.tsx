@@ -7,7 +7,10 @@ export function GalleryCard({ submission }: { submission: Submission }) {
   const carousel = useEntryCarousel(submission);
 
   return (
-    <article ref={carousel.rootRef} className="overflow-hidden rounded-xl border border-edge bg-panel-2">
+    <article
+      ref={carousel.rootRef}
+      className="mb-5 break-inside-avoid overflow-hidden rounded-xl border border-edge bg-panel-2"
+    >
       <div className="relative bg-ink">
         <EntryCarousel
           submission={submission}
