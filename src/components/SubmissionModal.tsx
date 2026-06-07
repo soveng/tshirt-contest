@@ -77,6 +77,10 @@ export function SubmissionModal({ item, onClose }: { item: RankedSubmission; onC
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft" && submission.images.length > 1)
+        setActive((a) => (a - 1 + submission.images.length) % submission.images.length);
+      if (e.key === "ArrowRight" && submission.images.length > 1)
+        setActive((a) => (a + 1) % submission.images.length);
     };
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
@@ -84,7 +88,15 @@ export function SubmissionModal({ item, onClose }: { item: RankedSubmission; onC
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [onClose]);
+  }, [onClose, submission.images.length]);
+
+  // Warm the cache for the other images so cycling through them is instant
+  useEffect(() => {
+    for (const url of submission.images) {
+      const img = new Image();
+      img.src = url;
+    }
+  }, [submission.id]);
 
   const nevent = nip19.neventEncode({ id: submission.id, author: submission.pubkey });
 
