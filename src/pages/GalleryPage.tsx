@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 
-import { useSubmissions } from "../hooks";
+import { useEntriesLoading, useSubmissions } from "../hooks";
 import { EmptyState } from "../components/EmptyState";
 import { GalleryCard } from "../components/GalleryCard";
+import { GallerySkeleton } from "../components/LoadingState";
 import { Header } from "../components/Header";
 import type { SortOption } from "../components/SortMenu";
 
@@ -17,6 +18,7 @@ function shuffle<T>(items: T[]): T[] {
 
 export function GalleryPage() {
   const submissions = useSubmissions();
+  const loading = useEntriesLoading();
   const [sort, setSort] = useState<SortOption>("random");
   const [seed, setSeed] = useState(0);
 
@@ -43,7 +45,9 @@ export function GalleryPage() {
       />
 
       <main className="page-shell pb-16 pt-5 sm:pb-20 sm:pt-6">
-        {submissions.length === 0 ? (
+        {loading ? (
+          <GallerySkeleton />
+        ) : submissions.length === 0 ? (
           <EmptyState />
         ) : (
           <div className="mx-auto max-w-6xl columns-1 gap-5 sm:columns-2">

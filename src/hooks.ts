@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { use$ } from "applesauce-react/hooks";
 
 import { accounts, eventStore } from "./nostr";
@@ -63,6 +63,34 @@ export function useSubmissions(): Submission[] {
       .map(toSubmission)
       .sort((a, b) => b.createdAt - a.createdAt);
   }, [notes]);
+}
+
+/** True while entry notes are still syncing from relays. */
+export function useEntriesLoading(): boolean {
+  const entryIds = useEntryIds();
+  const submissions = useSubmissions();
+  const acks = use$(() => eventStore.timeline({ kinds: [1], authors: [OFFICIAL_PUBKEY] }), []);
+  const notes = use$(
+    () => (entryIds.length ? eventStore.timeline({ ids: entryIds }) : undefined),
+    [entryIds.join(",")],
+  );
+  const [deadlinePassed, setDeadlinePassed] = useState(false);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => setDeadlinePassed(true), 6000);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  if (submissions.length > 0) return false;
+  if (deadlinePassed) return false;
+
+  const loadedCount = notes?.length ?? 0;
+  const ackCount = acks?.length ?? 0;
+
+  if (entryIds.length > 0 && loadedCount < entryIds.length) return true;
+  if (loadedCount === 0 && ackCount === 0) return true;
+
+  return false;
 }
 
 /** Entries with judge scores for the judging page. */

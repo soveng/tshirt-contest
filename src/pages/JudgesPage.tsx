@@ -1,9 +1,7 @@
-import { AccountsProvider } from "applesauce-react/providers";
-
-import { useActiveAccount, useIsJudge, useRankedSubmissions } from "../hooks";
-import { accounts } from "../nostr";
+import { useActiveAccount, useEntriesLoading, useIsJudge, useRankedSubmissions } from "../hooks";
 import { EmptyState } from "../components/EmptyState";
 import { Header } from "../components/Header";
+import { JudgesSkeleton } from "../components/LoadingState";
 import { RatingsIngest } from "../components/RatingsIngest";
 import { SubmissionCard } from "../components/SubmissionCard";
 
@@ -23,17 +21,14 @@ function JudgesIntro() {
 }
 
 export function JudgesPage() {
-  return (
-    <AccountsProvider manager={accounts}>
-      <JudgesPageContent />
-    </AccountsProvider>
-  );
+  return <JudgesPageContent />;
 }
 
 function JudgesPageContent() {
   const account = useActiveAccount();
   const isJudge = useIsJudge();
   const ranked = useRankedSubmissions();
+  const loading = useEntriesLoading();
 
   return (
     <div className="min-h-full">
@@ -42,7 +37,9 @@ function JudgesPageContent() {
       <JudgesIntro />
 
       <main className="page-shell max-w-6xl pb-24">
-        {ranked.length === 0 ? (
+        {loading ? (
+          <JudgesSkeleton />
+        ) : ranked.length === 0 ? (
           <EmptyState />
         ) : (
           <div className="flex flex-col gap-16 sm:gap-20">
