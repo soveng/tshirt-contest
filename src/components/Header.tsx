@@ -12,14 +12,9 @@ function HeaderTitle({ mode }: { mode: "gallery" | "judges" }) {
   const label = mode === "gallery" ? "Gallery" : "Judging";
 
   return (
-    <div className="flex min-w-0 items-center gap-2.5">
-      <span className="shrink-0 rounded border border-flame/30 bg-flame/10 px-1.5 py-0.5 font-mono text-[10px] font-medium tracking-[0.18em] text-flame">
-        SEC-08
-      </span>
-      <span className="truncate font-display text-base font-bold tracking-tight text-neutral-50 sm:text-lg">
-        T-Shirt <span className="text-flame">{label}</span>
-      </span>
-    </div>
+    <span className="truncate font-display text-base font-bold tracking-tight text-neutral-50 sm:text-lg">
+      <span className="text-flame">SEC-08</span> T-Shirt {label}
+    </span>
   );
 }
 
