@@ -45,14 +45,14 @@ export function SubmissionCard({
       style={{ animationDelay: `${Math.min(index, 12) * 45}ms` }}
       className="min-w-0 animate-[pop_0.4s_ease-out_both] lg:grid lg:grid-cols-[minmax(0,1fr)_min(17rem,32%)] lg:items-start lg:gap-8 xl:grid-cols-[minmax(0,1fr)_min(20rem,28%)] xl:gap-10"
     >
-      <div className="relative flex min-h-[12rem] min-w-0 items-center justify-center overflow-hidden rounded-xl border border-edge bg-panel-2">
+      <div className="relative min-w-0 overflow-hidden rounded-xl border border-edge bg-ink">
         <EntryCarousel
           submission={submission}
           active={carousel.active}
           image={carousel.image}
           hasCarousel={carousel.hasCarousel}
           showSlide={carousel.showSlide}
-          imageClassName="max-h-[min(72vh,720px)] max-w-full object-contain lg:max-h-[min(80vh,840px)]"
+          imageClassName="block w-full"
         />
       </div>
 

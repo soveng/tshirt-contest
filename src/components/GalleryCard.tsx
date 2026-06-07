@@ -8,14 +8,14 @@ export function GalleryCard({ submission }: { submission: Submission }) {
 
   return (
     <article ref={carousel.rootRef} className="overflow-hidden rounded-xl border border-edge bg-panel-2">
-      <div className="relative flex min-h-[17rem] items-center justify-center bg-ink p-4 sm:min-h-[22rem] sm:p-6 lg:min-h-[26rem]">
+      <div className="relative bg-ink">
         <EntryCarousel
           submission={submission}
           active={carousel.active}
           image={carousel.image}
           hasCarousel={carousel.hasCarousel}
           showSlide={carousel.showSlide}
-          imageClassName="max-h-full max-w-full object-contain"
+          imageClassName="block w-full"
         />
       </div>
 
