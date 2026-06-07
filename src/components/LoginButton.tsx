@@ -2,9 +2,9 @@ import { useState } from "react";
 
 import { loginWithExtension, logout } from "../nostr";
 import { useActiveAccount, useIsJudge } from "../hooks";
-import { Author } from "./Author";
+import { Author, AuthorAvatar } from "./Author";
 
-export function LoginButton() {
+export function LoginButton({ compact = false }: { compact?: boolean }) {
   const account = useActiveAccount();
   const isJudge = useIsJudge();
   const [error, setError] = useState<string | null>(null);
@@ -20,8 +20,8 @@ export function LoginButton() {
 
   if (account) {
     return (
-      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-        <div className="flex min-w-0 max-w-[42vw] items-center gap-2 sm:max-w-none">
+      <div className="flex min-w-0 items-center gap-1.5 sm:gap-3">
+        <div className={`flex min-w-0 items-center gap-2 ${compact ? "hidden sm:flex" : "max-w-[42vw] sm:max-w-none"}`}>
           <Author pubkey={account.pubkey} size={26} />
           <span
             className={`hidden rounded-full px-2 py-0.5 font-mono text-[10px] tracking-wide uppercase sm:inline ${
@@ -31,12 +31,18 @@ export function LoginButton() {
             {isJudge ? "Judge" : "Spectator"}
           </span>
         </div>
+        {compact && (
+          <div className="shrink-0 sm:hidden">
+            <AuthorAvatar pubkey={account.pubkey} size={26} />
+          </div>
+        )}
         <button
           type="button"
           onClick={logout}
-          className="inline-flex shrink-0 cursor-pointer items-center rounded-lg border border-edge px-3.5 py-2 text-sm leading-none text-muted transition-colors hover:border-neutral-600 hover:text-neutral-200"
+          className="inline-flex shrink-0 cursor-pointer items-center rounded-lg border border-edge px-2 py-2 text-sm leading-none text-muted transition-colors hover:border-neutral-600 hover:text-neutral-200 sm:px-3.5"
         >
-          Sign out
+          <span className="sm:hidden">Out</span>
+          <span className="hidden sm:inline">Sign out</span>
         </button>
       </div>
     );
@@ -47,7 +53,7 @@ export function LoginButton() {
       <button
         type="button"
         onClick={connect}
-        className="cursor-pointer rounded-lg bg-flame px-3.5 py-1.5 text-sm font-semibold leading-none text-ink transition-transform hover:scale-105"
+        className="cursor-pointer rounded-lg bg-flame px-3.5 py-2 text-sm font-semibold leading-none text-ink transition-transform hover:scale-105"
       >
         Login to judge
       </button>

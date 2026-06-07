@@ -29,7 +29,7 @@ function HeaderTitle({ mode }: { mode: "gallery" | "judges" }) {
       >
         SEC-08
       </a>
-      <span className="hidden min-[420px]:inline">
+      <span className="hidden sm:inline">
         {" "}
         T-Shirt {label}
       </span>
@@ -109,7 +109,7 @@ export function Header({
             </div>
           </div>
 
-          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <div className="flex min-w-0 shrink items-center gap-1.5 sm:gap-3">
             {mode === "gallery" ? (
               <>
                 <JudgeLoginLink />
@@ -117,16 +117,21 @@ export function Header({
               </>
             ) : (
               <>
-                <Link to="/" className={navLink}>
+                <Link to="/" className={`${navLink} hidden sm:inline`}>
                   Gallery
                 </Link>
-                <LoginButton />
+                <LoginButton compact />
               </>
             )}
           </div>
         </div>
 
         <div className="mt-2 flex items-center gap-3 border-t border-edge/50 pt-2 sm:hidden">
+          {mode === "judges" && (
+            <Link to="/" className={navLink}>
+              Gallery
+            </Link>
+          )}
           <HeaderMeta submissionCount={submissionCount} sort={sort} onSortChange={onSortChange} />
         </div>
       </div>
