@@ -15,13 +15,22 @@ const primaryButton = `${headerButton} bg-flame text-ink`;
 const secondaryButton = `${headerButton} border border-edge text-neutral-200 hover:border-neutral-600 hover:text-flame`;
 
 const SOVENG_TAG_URL = "https://ants.sh/t/SovEng";
+const SOVENG_APPLY_URL = "https://sovereignengineering.io/#apply";
 
 function HeaderTitle({ mode }: { mode: "gallery" | "judges" }) {
   const label = mode === "gallery" ? "Gallery" : "Judging";
 
   return (
     <span className="truncate font-display text-base font-bold tracking-tight text-neutral-50 sm:text-lg">
-      <span className="text-flame">SEC-08</span> T-Shirt {label}
+      <a
+        href={SOVENG_APPLY_URL}
+        target="_blank"
+        rel="noreferrer"
+        className="text-flame transition-colors hover:text-flame-soft"
+      >
+        SEC-08
+      </a>{" "}
+      T-Shirt {label}
     </span>
   );
 }
