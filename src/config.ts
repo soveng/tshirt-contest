@@ -18,6 +18,16 @@ export const LOOKUP_RELAYS = ["wss://purplepag.es/", "wss://index.hzrd149.com/"]
 /** NIP-32 label namespace that scopes a rating to this contest */
 export const RATING_NAMESPACE = "io.sovereignengineering.tshirt";
 
+/** The official Sovereign Engineering account that acknowledges entries */
+export const OFFICIAL_NPUB =
+  "npub1s0veng2gvfwr62acrxhnqexq76sj6ldg3a5t935jy8e6w3shr5vsnwrmq5";
+
+/** The contest announcement note; official replies thread off it but it isn't an entry */
+export const ANNOUNCEMENT_ID = "2ba7d8b0dfdf550e4a883ac1ac4b1425fa6f514933010a30c1b4e9c79bc536f0";
+
+/** Only look at activity from when the contest opened */
+export const CONTEST_SINCE = Math.floor(new Date("2026-05-26T00:00:00Z").getTime() / 1000);
+
 /** The five judges, by npub */
 export const JUDGE_NPUBS = [
   "npub1dergggklka99wwrs92yz8wdjs952h2ux2ha2ed598ngwu9w7a6fsh9xzpc",
@@ -34,6 +44,9 @@ function decodeNpub(npub: string): string {
 
 /** Judge pubkeys in hex */
 export const JUDGE_PUBKEYS = JUDGE_NPUBS.map(decodeNpub);
+
+/** Official account pubkey in hex */
+export const OFFICIAL_PUBKEY = decodeNpub(OFFICIAL_NPUB);
 
 /** Fast lookup for "is this pubkey a judge" */
 export const JUDGE_SET = new Set(JUDGE_PUBKEYS);

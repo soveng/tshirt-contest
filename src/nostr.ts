@@ -4,7 +4,15 @@ import { onlyEvents, RelayPool } from "applesauce-relay";
 import { AccountManager } from "applesauce-accounts";
 import { ExtensionAccount, registerCommonAccountTypes } from "applesauce-accounts/accounts";
 
-import { HASHTAG, JUDGE_PUBKEYS, LOOKUP_RELAYS, RATING_NAMESPACE, RELAYS } from "./config";
+import {
+  CONTEST_SINCE,
+  JUDGE_PUBKEYS,
+  LOOKUP_RELAYS,
+  OFFICIAL_PUBKEY,
+  RATING_NAMESPACE,
+  RELAYS,
+} from "./config";
+import { acknowledgedSubmissionId } from "./submissions";
 
 /** Single shared event store for the whole app */
 export const eventStore = new EventStore();
@@ -55,12 +63,30 @@ export async function restoreSession(): Promise<void> {
   }
 }
 
-/** Subscribe to contest submissions and judge ratings, piping both into the store */
+/**
+ * Subscribe to the contest data and pipe it into the store:
+ * - acknowledgement notes from the official account confirm which notes are entries
+ * - each acknowledged entry note is loaded on demand
+ * - judge ratings (NIP-32 labels) are loaded for scoring
+ */
 export function startIngest(): () => void {
-  const submissions = pool
-    .subscription(RELAYS, { kinds: [1], "#t": [HASHTAG] })
+  const requested = new Set<string>();
+  const entryLoaders = new Map<string, { unsubscribe(): void }>();
+
+  const acks = pool
+    .subscription(RELAYS, { kinds: [1], authors: [OFFICIAL_PUBKEY], since: CONTEST_SINCE })
     .pipe(onlyEvents())
-    .subscribe((event) => eventStore.add(event));
+    .subscribe((event) => {
+      eventStore.add(event);
+      const id = acknowledgedSubmissionId(event);
+      if (!id || requested.has(id)) return;
+      requested.add(id);
+      // Fetch the entry note from the contest relays (it isn't on the lookup relays)
+      entryLoaders.set(
+        id,
+        pool.request(RELAYS, { ids: [id] }).subscribe((entry) => eventStore.add(entry)),
+      );
+    });
 
   const ratings = pool
     .subscription(RELAYS, {
@@ -72,7 +98,8 @@ export function startIngest(): () => void {
     .subscribe((event) => eventStore.add(event));
 
   return () => {
-    submissions.unsubscribe();
+    acks.unsubscribe();
     ratings.unsubscribe();
+    for (const sub of entryLoaders.values()) sub.unsubscribe();
   };
 }
