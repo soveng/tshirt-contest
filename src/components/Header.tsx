@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { CONTEST } from "../config";
+import { JudgeLoginLink } from "./JudgeLoginLink";
 import { LoginButton } from "./LoginButton";
 import { SortMenu, type SortOption } from "./SortMenu";
 
@@ -89,9 +90,7 @@ export function Header({
         <div className="flex shrink-0 items-center gap-3 sm:gap-4">
           {mode === "gallery" ? (
             <>
-              <Link to="/judges" className={navLink}>
-                Login to judge
-              </Link>
+              <JudgeLoginLink />
               <SubmitDesignButton />
             </>
           ) : (
