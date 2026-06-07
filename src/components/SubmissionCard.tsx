@@ -21,19 +21,20 @@ function EntryMeta({
 
   return (
     <div className="flex w-full min-w-0 flex-col items-start gap-4">
-      <span className="font-mono text-xs leading-none text-flame/50 sm:text-sm">
-        {String(index + 1).padStart(2, "0")}
-      </span>
+      <div className="flex items-baseline gap-1.5 font-mono text-xs leading-none text-flame/50 sm:text-sm">
+        <span>{String(index + 1).padStart(2, "0")}</span>
+        <a
+          href={`https://njump.me/${nevent}`}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="View on njump"
+          className="text-muted transition-colors hover:text-flame"
+        >
+          ↗
+        </a>
+      </div>
       <Author pubkey={submission.pubkey} size={32} />
       {submission.content && <NoteContent content={submission.content} maxLength={400} />}
-      <a
-        href={`https://njump.me/${nevent}`}
-        target="_blank"
-        rel="noreferrer"
-        className="font-mono text-[11px] text-muted underline-offset-4 hover:text-flame hover:underline"
-      >
-        njump ↗
-      </a>
       {isJudge && <RateStars submission={submission} myRating={myRating} size={28} />}
     </div>
   );
