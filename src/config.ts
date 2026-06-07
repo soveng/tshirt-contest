@@ -10,6 +10,10 @@ export const RELAYS = [
   "wss://relay.primal.net/",
   "wss://relay.nostr.band/",
   "wss://nostr.wine/",
+  "wss://nostr.bitcoiner.social/",
+  "wss://relay.snort.social/",
+  "wss://relay.current.fyi/",
+  "wss://index.hzrd149.com/",
 ];
 
 /** Relays used to look up profiles and relay lists */
