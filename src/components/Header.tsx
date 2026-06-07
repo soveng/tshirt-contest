@@ -27,7 +27,7 @@ export function Header({ mode }: { mode: "gallery" | "judges" }) {
 
         {mode === "gallery" ? (
           <Link to="/judges" className={navLink}>
-            Judge Login
+            Login to judge
           </Link>
         ) : (
           <div className="flex shrink-0 items-center gap-3 sm:gap-4">
