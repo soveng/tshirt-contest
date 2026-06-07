@@ -6,13 +6,20 @@ import { Author } from "./Author";
 import { NoteContent } from "./NoteContent";
 import { RateStars } from "./RateStars";
 
+function formatSubmissionDate(unixSeconds: number): string {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(unixSeconds * 1000));
+}
+
 function EntryMeta({
-  index,
   submission,
   isJudge,
   myRating,
 }: {
-  index: number;
   submission: RankedSubmission["submission"];
   isJudge: boolean;
   myRating: number | undefined;
@@ -22,7 +29,7 @@ function EntryMeta({
   return (
     <div className="flex w-full min-w-0 flex-col items-start gap-4">
       <div className="flex items-baseline gap-1.5 font-mono text-xs leading-none text-flame/50 sm:text-sm">
-        <span>{String(index + 1).padStart(2, "0")}</span>
+        <span>{formatSubmissionDate(submission.createdAt)}</span>
         <a
           href={`https://njump.me/${nevent}`}
           target="_blank"
@@ -139,7 +146,7 @@ export function SubmissionCard({
       </div>
 
       <aside className="mt-4 min-w-0 lg:sticky lg:top-20 lg:mt-0 lg:pt-1">
-        <EntryMeta index={index} submission={submission} isJudge={isJudge} myRating={myRating} />
+        <EntryMeta submission={submission} isJudge={isJudge} myRating={myRating} />
       </aside>
     </article>
   );
