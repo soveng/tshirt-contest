@@ -18,14 +18,19 @@ function RankChip({ rank, rated }: { rank: number; rated: boolean }) {
 export function SubmissionCard({
   item,
   index,
+  blind,
+  viewerPubkey,
   onOpen,
 }: {
   item: RankedSubmission;
   index: number;
+  blind: boolean;
+  viewerPubkey?: string;
   onOpen: () => void;
 }) {
   const { submission, score } = item;
   const rated = score.average !== null;
+  const myRating = viewerPubkey ? score.byJudge[viewerPubkey] : undefined;
 
   return (
     <button
@@ -47,9 +52,11 @@ export function SubmissionCard({
             {submission.content.slice(0, 140) || "No preview"}
           </p>
         )}
-        <div className="absolute top-2.5 left-2.5">
-          <RankChip rank={item.rank} rated={rated} />
-        </div>
+        {!blind && (
+          <div className="absolute top-2.5 left-2.5">
+            <RankChip rank={item.rank} rated={rated} />
+          </div>
+        )}
         {submission.images.length > 1 && (
           <span className="absolute right-2.5 bottom-2.5 rounded-full bg-ink/70 px-2 py-0.5 font-mono text-[10px] text-neutral-300 backdrop-blur-sm">
             +{submission.images.length - 1}
@@ -60,7 +67,16 @@ export function SubmissionCard({
       <div className="flex items-center justify-between gap-2 px-3 py-2.5">
         <Author pubkey={submission.pubkey} size={26} />
         <div className="flex shrink-0 flex-col items-end">
-          {rated ? (
+          {blind ? (
+            myRating ? (
+              <>
+                <StarsDisplay value={myRating} size={13} />
+                <span className="font-mono text-[10px] text-muted">your rating</span>
+              </>
+            ) : (
+              <span className="font-mono text-[10px] text-flame-soft">rate</span>
+            )
+          ) : rated ? (
             <>
               <StarsDisplay value={score.average!} size={13} />
               <span className="font-mono text-[10px] text-muted">

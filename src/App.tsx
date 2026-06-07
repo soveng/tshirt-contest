@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { CONTEST } from "./config";
-import { useRankedSubmissions } from "./hooks";
+import { useActiveAccount, useIsJudge, useRankedSubmissions } from "./hooks";
 import { Header } from "./components/Header";
 import { SubmissionCard } from "./components/SubmissionCard";
 import { SubmissionModal } from "./components/SubmissionModal";
@@ -52,7 +52,9 @@ function Empty() {
 }
 
 export default function App() {
-  const ranked = useRankedSubmissions();
+  const account = useActiveAccount();
+  const blind = useIsJudge();
+  const ranked = useRankedSubmissions(blind);
   const [openId, setOpenId] = useState<string | null>(null);
   const open = ranked.find((r) => r.submission.id === openId) ?? null;
 
@@ -60,6 +62,15 @@ export default function App() {
     <div className="min-h-full">
       <Header />
       <Intro count={ranked.length} />
+
+      {blind && (
+        <div className="mx-auto max-w-6xl px-5 pb-2">
+          <p className="rounded-lg border border-edge bg-panel px-4 py-2.5 font-mono text-xs text-muted">
+            Blind judging is on. Other judges' votes and the running tally are hidden so they don't
+            sway your call. You only see your own ratings.
+          </p>
+        </div>
+      )}
 
       <main className="mx-auto max-w-6xl px-5 pb-24">
         {ranked.length === 0 ? (
@@ -71,6 +82,8 @@ export default function App() {
                 key={item.submission.id}
                 item={item}
                 index={index}
+                blind={blind}
+                viewerPubkey={account?.pubkey}
                 onOpen={() => setOpenId(item.submission.id)}
               />
             ))}

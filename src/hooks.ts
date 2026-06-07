@@ -29,8 +29,12 @@ export function useProfile(pubkey: string | undefined) {
   return use$(() => (pubkey ? eventStore.profile(pubkey) : undefined), [pubkey]);
 }
 
-/** All confirmed entries, plus their judge scores, ranked for display */
-export function useRankedSubmissions(): RankedSubmission[] {
+/**
+ * All confirmed entries, plus their judge scores, ranked for display.
+ * In blind mode entries are ordered neutrally (by submission time) so the
+ * ordering itself doesn't leak the aggregate score to a judge.
+ */
+export function useRankedSubmissions(blind = false): RankedSubmission[] {
   // Acknowledgement notes from the official account confirm which notes are entries
   const acks = use$(() => eventStore.timeline({ kinds: [1], authors: [OFFICIAL_PUBKEY] }), []);
 
@@ -65,6 +69,7 @@ export function useRankedSubmissions(): RankedSubmission[] {
     const ordered = submissions
       .map((submission) => ({ submission, score: scores.get(submission.id) ?? empty }))
       .sort((a, b) => {
+        if (blind) return a.submission.createdAt - b.submission.createdAt;
         const avgA = a.score.average ?? -1;
         const avgB = b.score.average ?? -1;
         if (avgB !== avgA) return avgB - avgA;
@@ -73,5 +78,5 @@ export function useRankedSubmissions(): RankedSubmission[] {
       });
 
     return ordered.map((item, index) => ({ ...item, rank: index + 1 }));
-  }, [notes, ratings]);
+  }, [notes, ratings, blind]);
 }

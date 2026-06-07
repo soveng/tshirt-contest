@@ -27,6 +27,25 @@ function JudgePanel({ item }: { item: RankedSubmission }) {
     }
   }
 
+  // Judges rate blind: they never see other judges' votes or the tally
+  if (isJudge) {
+    return (
+      <div className="rounded-xl border border-edge bg-panel-2 p-4">
+        <div className="mb-2 flex items-center justify-between">
+          <span className="text-sm text-neutral-300">
+            {myRating ? "Your rating" : "Cast your rating"}
+          </span>
+          {pending && <span className="font-mono text-[11px] text-flame-soft">signing…</span>}
+        </div>
+        <StarsInput value={myRating ?? 0} onRate={rate} disabled={pending} />
+        <p className="mt-3 font-mono text-[10px] text-muted">
+          Other judges' votes are hidden while judging.
+        </p>
+        {error && <p className="mt-2 font-mono text-[11px] text-flame-soft">{error}</p>}
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-xl border border-edge bg-panel-2 p-4">
       <div className="mb-3 flex items-center justify-between">
@@ -53,19 +72,6 @@ function JudgePanel({ item }: { item: RankedSubmission }) {
           );
         })}
       </div>
-
-      {isJudge && (
-        <div className="mt-4 border-t border-edge pt-4">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm text-neutral-300">
-              {myRating ? "Your rating" : "Cast your rating"}
-            </span>
-            {pending && <span className="font-mono text-[11px] text-flame-soft">signing…</span>}
-          </div>
-          <StarsInput value={myRating ?? 0} onRate={rate} disabled={pending} />
-          {error && <p className="mt-2 font-mono text-[11px] text-flame-soft">{error}</p>}
-        </div>
-      )}
     </div>
   );
 }
