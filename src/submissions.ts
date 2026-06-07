@@ -26,6 +26,27 @@ function extractImages(event: NostrEvent): string[] {
   return [...urls];
 }
 
+/** Drop image URLs and trailing whitespace from note text shown beside the mockup */
+function cleanContent(content: string, imageUrls: readonly string[]): string {
+  let text = content;
+
+  for (const url of imageUrls) {
+    text = text.replaceAll(url, "");
+  }
+
+  text = text.replace(new RegExp(IMAGE_URL.source, IMAGE_URL.flags), "");
+
+  text = text.replace(
+    /!\[[^\]]*\]\(\s*https?:\/\/[^\s"'<>)]+\.(?:png|jpe?g|gif|webp|avif)(?:\?[^\s"'<>)]*)?\s*\)/gi,
+    "",
+  );
+
+  text = text.replace(/^\s+$/gm, "");
+  text = text.replace(/\n{3,}/g, "\n\n");
+
+  return text.trimEnd();
+}
+
 /**
  * If an official-account note acknowledges an entry, return the id of the
  * submission note it is replying to. Otherwise null.
@@ -49,12 +70,13 @@ export function acknowledgedSubmissionId(reply: NostrEvent): string | null {
 
 /** Turn a confirmed entry note into a Submission */
 export function toSubmission(event: NostrEvent): Submission {
+  const images = extractImages(event);
   return {
     id: event.id,
     pubkey: event.pubkey,
     createdAt: event.created_at,
-    content: event.content,
-    images: extractImages(event),
+    content: cleanContent(event.content, images),
+    images,
     event,
   };
 }
