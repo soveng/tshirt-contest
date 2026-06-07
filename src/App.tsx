@@ -27,19 +27,14 @@ function Intro({ count }: { count: number }) {
         judges. Each judge rates from one to five stars; the average decides the ranking.
       </p>
       <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-xs text-muted">
-        <span>
-          <span className="text-neutral-400">Deadline</span> {CONTEST.deadline}
-        </span>
-        <span>
-          <span className="text-neutral-400">Entries</span> {count}
-        </span>
+        <span>{count} Entries</span>
         <a
           href={CONTEST.brief}
           target="_blank"
           rel="noreferrer"
           className="text-flame underline-offset-4 hover:underline"
         >
-          Read the brief ↗
+          Prizes & rules ↗
         </a>
       </div>
     </section>
@@ -69,8 +64,8 @@ function Empty() {
 
 export default function App() {
   const account = useActiveAccount();
-  const blind = useIsJudge();
-  const ranked = useRankedSubmissions(blind);
+  const isJudge = useIsJudge();
+  const ranked = useRankedSubmissions();
   const [openId, setOpenId] = useState<string | null>(null);
   const open = ranked.find((r) => r.submission.id === openId) ?? null;
 
@@ -79,17 +74,17 @@ export default function App() {
       <Header />
       <Intro count={ranked.length} />
 
-      <main className="mx-auto max-w-6xl px-5 pb-24">
+      <main className="mx-auto max-w-2xl px-5 pb-24">
         {ranked.length === 0 ? (
           <Empty />
         ) : (
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+          <div className="flex flex-col gap-14 sm:gap-16">
             {ranked.map((item, index) => (
               <SubmissionCard
                 key={item.submission.id}
                 item={item}
                 index={index}
-                blind={blind}
+                isJudge={isJudge}
                 viewerPubkey={account?.pubkey}
                 onOpen={() => setOpenId(item.submission.id)}
               />
