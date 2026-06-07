@@ -7,8 +7,12 @@ import { SortMenu, type SortOption } from "./SortMenu";
 const navLink =
   "font-mono text-xs text-muted underline-offset-4 transition-colors hover:text-flame hover:underline sm:text-sm";
 
-const primaryButton =
-  "rounded-lg bg-flame px-3.5 py-1.5 text-sm font-semibold text-ink transition-transform hover:scale-105";
+const headerButton =
+  "inline-flex items-center rounded-lg px-3.5 py-1.5 text-sm font-semibold leading-none transition-transform hover:scale-105";
+
+const primaryButton = `${headerButton} bg-flame text-ink`;
+
+const secondaryButton = `${headerButton} border border-edge text-neutral-200 hover:border-neutral-600 hover:text-flame`;
 
 const SOVENG_TAG_URL = "https://ants.sh/t/SovEng";
 
@@ -78,7 +82,7 @@ export function Header({
         <div className="flex shrink-0 items-center gap-3 sm:gap-4">
           {mode === "gallery" ? (
             <>
-              <Link to="/judges" className={navLink}>
+              <Link to="/judges" className={secondaryButton}>
                 Login to judge
               </Link>
               <SubmitDesignButton />

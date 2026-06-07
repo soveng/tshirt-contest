@@ -47,7 +47,7 @@ export function LoginButton() {
       <button
         type="button"
         onClick={connect}
-        className="cursor-pointer rounded-lg bg-flame px-4 py-2 text-sm font-semibold text-ink transition-transform hover:scale-105"
+        className="cursor-pointer rounded-lg bg-flame px-3.5 py-1.5 text-sm font-semibold leading-none text-ink transition-transform hover:scale-105"
       >
         Login to judge
       </button>
