@@ -35,7 +35,7 @@ export function useProfile(pubkey: string | undefined) {
   return use$(() => (pubkey ? eventStore.profile(pubkey) : undefined), [pubkey]);
 }
 
-/** All confirmed entries with judge scores. Entries are always shown in submission order so the grid doesn't leak results. */
+/** All confirmed entries with judge scores. Entries are shown newest-first so the feed doesn't leak results. */
 export function useRankedSubmissions(): RankedSubmission[] {
   // Acknowledgement notes from the official account confirm which notes are entries
   const acks = use$(() => eventStore.timeline({ kinds: [1], authors: [OFFICIAL_PUBKEY] }), []);
@@ -70,7 +70,7 @@ export function useRankedSubmissions(): RankedSubmission[] {
 
     const ordered = submissions
       .map((submission) => ({ submission, score: scores.get(submission.id) ?? empty }))
-      .sort((a, b) => a.submission.createdAt - b.submission.createdAt);
+      .sort((a, b) => b.submission.createdAt - a.submission.createdAt);
 
     return ordered.map((item, index) => ({ ...item, rank: index + 1 }));
   }, [notes, ratings]);
