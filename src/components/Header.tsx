@@ -8,10 +8,20 @@ const navLink =
 
 const SOVENG_TAG_URL = "https://ants.sh/t/SovEng";
 
-const titles = {
-  gallery: "SEC-08 T-Shirt Gallery",
-  judges: "SEC-08 T-Shirt Judging",
-} as const;
+function HeaderTitle({ mode }: { mode: "gallery" | "judges" }) {
+  const label = mode === "gallery" ? "Gallery" : "Judging";
+
+  return (
+    <div className="flex min-w-0 items-baseline gap-2 sm:gap-2.5">
+      <span className="shrink-0 font-mono text-[10px] tracking-[0.24em] text-flame/75 sm:text-[11px]">
+        SEC-08
+      </span>
+      <span className="truncate font-brand text-[1.05rem] leading-none text-neutral-50 sm:text-[1.35rem]">
+        T-Shirt <span className="text-flame">{label}</span>
+      </span>
+    </div>
+  );
+}
 
 function RulesLink() {
   return (
