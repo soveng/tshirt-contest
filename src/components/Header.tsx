@@ -9,7 +9,7 @@ const navLink =
   "font-mono text-xs text-muted underline-offset-4 transition-colors hover:text-flame hover:underline sm:text-sm";
 
 const headerButton =
-  "inline-flex items-center rounded-lg px-3.5 py-2 text-sm font-semibold leading-none transition-transform hover:scale-105";
+  "inline-flex items-center rounded-lg px-2.5 py-2 text-sm font-semibold leading-none transition-transform hover:scale-105 sm:px-3.5";
 
 const primaryButton = `${headerButton} bg-flame text-ink`;
 
@@ -20,7 +20,7 @@ function HeaderTitle({ mode }: { mode: "gallery" | "judges" }) {
   const label = mode === "gallery" ? "Gallery" : "Judging";
 
   return (
-    <span className="truncate font-display text-base font-bold tracking-tight text-neutral-50 sm:text-lg">
+    <span className="min-w-0 truncate font-display text-base font-bold tracking-tight text-neutral-50 sm:text-lg">
       <a
         href={SOVENG_APPLY_URL}
         target="_blank"
@@ -28,8 +28,11 @@ function HeaderTitle({ mode }: { mode: "gallery" | "judges" }) {
         className="text-flame transition-colors hover:text-flame-soft"
       >
         SEC-08
-      </a>{" "}
-      T-Shirt {label}
+      </a>
+      <span className="hidden min-[420px]:inline">
+        {" "}
+        T-Shirt {label}
+      </span>
     </span>
   );
 }
@@ -37,7 +40,8 @@ function HeaderTitle({ mode }: { mode: "gallery" | "judges" }) {
 function SubmitDesignButton() {
   return (
     <a href={CONTEST.brief} target="_blank" rel="noreferrer" className={primaryButton}>
-      Submit Design
+      <span className="sm:hidden">Submit</span>
+      <span className="hidden sm:inline">Submit Design</span>
     </a>
   );
 }
@@ -51,8 +55,26 @@ function SubmissionsLink({ count }: { count: number }) {
       className={navLink}
       aria-label={`${count} submissions on ants.sh`}
     >
-      {count} submissions ↗
+      <span className="sm:hidden">{count} ↗</span>
+      <span className="hidden sm:inline">{count} submissions ↗</span>
     </a>
+  );
+}
+
+function HeaderMeta({
+  submissionCount,
+  sort,
+  onSortChange,
+}: {
+  submissionCount: number;
+  sort?: SortOption;
+  onSortChange?: (next: SortOption) => void;
+}) {
+  return (
+    <div className="flex items-center gap-3 sm:gap-4">
+      {sort && onSortChange && <SortMenu value={sort} onChange={onSortChange} />}
+      <SubmissionsLink count={submissionCount} />
+    </div>
   );
 }
 
@@ -69,38 +91,43 @@ export function Header({
 }) {
   return (
     <header className="sticky top-0 z-30 border-b border-edge/70 bg-ink/80 backdrop-blur-md">
-      <div className="page-shell flex items-center justify-between gap-4 py-3 sm:py-3.5">
-        <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-          <a
-            href="https://sovereignengineering.io/"
-            target="_blank"
-            rel="noreferrer"
-            className="shrink-0 text-neutral-200 transition-colors hover:text-flame"
-            aria-label="Sovereign Engineering"
-          >
-            <img src="/soveng-brandmark.svg" alt="" width={32} height={32} />
-          </a>
-          <HeaderTitle mode={mode} />
-          <div className="flex shrink-0 items-center gap-3 border-l border-edge/70 pl-3 sm:gap-4 sm:pl-4">
-            {sort && onSortChange && <SortMenu value={sort} onChange={onSortChange} />}
-            <SubmissionsLink count={submissionCount} />
+      <div className="page-shell py-3 sm:py-3.5">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
+          <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
+            <a
+              href="https://sovereignengineering.io/"
+              target="_blank"
+              rel="noreferrer"
+              className="shrink-0 text-neutral-200 transition-colors hover:text-flame"
+              aria-label="Sovereign Engineering"
+            >
+              <img src="/soveng-brandmark.svg" alt="" width={32} height={32} />
+            </a>
+            <HeaderTitle mode={mode} />
+            <div className="hidden min-w-0 items-center gap-3 border-l border-edge/70 pl-3 sm:flex sm:gap-4 sm:pl-4">
+              <HeaderMeta submissionCount={submissionCount} sort={sort} onSortChange={onSortChange} />
+            </div>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            {mode === "gallery" ? (
+              <>
+                <JudgeLoginLink />
+                <SubmitDesignButton />
+              </>
+            ) : (
+              <>
+                <Link to="/" className={navLink}>
+                  Gallery
+                </Link>
+                <LoginButton />
+              </>
+            )}
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-3 sm:gap-4">
-          {mode === "gallery" ? (
-            <>
-              <JudgeLoginLink />
-              <SubmitDesignButton />
-            </>
-          ) : (
-            <>
-              <Link to="/" className={navLink}>
-                Gallery
-              </Link>
-              <LoginButton />
-            </>
-          )}
+        <div className="mt-2 flex items-center gap-3 border-t border-edge/50 pt-2 sm:hidden">
+          <HeaderMeta submissionCount={submissionCount} sort={sort} onSortChange={onSortChange} />
         </div>
       </div>
     </header>

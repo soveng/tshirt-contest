@@ -39,7 +39,7 @@ export function JudgeLoginLink() {
         disabled={busy}
         className={`${navLink} cursor-pointer disabled:cursor-wait disabled:opacity-60`}
       >
-        {busy ? "Connecting…" : "Login to judge"}
+        {busy ? "…" : <><span className="sm:hidden">Judge</span><span className="hidden sm:inline">Login to judge</span></>}
       </button>
       {error && <span className="font-mono text-[11px] text-flame-soft">{error}</span>}
     </div>
