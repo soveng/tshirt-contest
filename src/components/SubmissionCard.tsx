@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { nip19 } from "nostr-tools";
 
 import type { RankedSubmission } from "../hooks";
@@ -53,11 +53,45 @@ export function SubmissionCard({
   const { submission, score } = item;
   const myRating = viewerPubkey ? score.byJudge[viewerPubkey] : undefined;
   const [active, setActive] = useState(0);
+  const rootRef = useRef<HTMLElement>(null);
   const hasImages = submission.images.length > 0;
   const image = hasImages ? submission.images[active] : null;
+  const hasCarousel = submission.images.length > 1;
+
+  const preloadCarousel = useCallback(() => {
+    for (const url of submission.images) {
+      const img = new Image();
+      img.src = url;
+    }
+  }, [submission.images]);
+
+  // Warm the cache for carousel slides once the entry is near the viewport
+  useEffect(() => {
+    if (!hasCarousel) return;
+    const el = rootRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          preloadCarousel();
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "400px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasCarousel, submission.id, preloadCarousel]);
+
+  function showSlide(next: number) {
+    preloadCarousel();
+    setActive(next);
+  }
 
   return (
     <article
+      ref={rootRef}
       style={{ animationDelay: `${Math.min(index, 12) * 45}ms` }}
       className="min-w-0 animate-[pop_0.4s_ease-out_both] lg:grid lg:grid-cols-[minmax(0,1fr)_min(17rem,32%)] lg:items-start lg:gap-8 xl:grid-cols-[minmax(0,1fr)_min(20rem,28%)] xl:gap-10"
     >
@@ -66,7 +100,8 @@ export function SubmissionCard({
           <img
             src={image}
             alt=""
-            loading="lazy"
+            loading={hasCarousel ? "eager" : "lazy"}
+            decoding="async"
             className="max-h-[min(72vh,720px)] max-w-full object-contain lg:max-h-[min(80vh,840px)]"
           />
         ) : (
@@ -80,7 +115,7 @@ export function SubmissionCard({
             <button
               type="button"
               onClick={() =>
-                setActive((a) => (a - 1 + submission.images.length) % submission.images.length)
+                showSlide((active - 1 + submission.images.length) % submission.images.length)
               }
               className="absolute top-1/2 left-3 -translate-y-1/2 cursor-pointer rounded-full bg-ink/70 px-3 py-2 text-neutral-200 hover:bg-ink"
               aria-label="Previous image"
@@ -89,7 +124,7 @@ export function SubmissionCard({
             </button>
             <button
               type="button"
-              onClick={() => setActive((a) => (a + 1) % submission.images.length)}
+              onClick={() => showSlide((active + 1) % submission.images.length)}
               className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer rounded-full bg-ink/70 px-3 py-2 text-neutral-200 hover:bg-ink"
               aria-label="Next image"
             >
