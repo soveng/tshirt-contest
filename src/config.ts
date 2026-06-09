@@ -47,6 +47,7 @@ export const EXTRA_ENTRY_REFS = [
  */
 export const EXCLUDED_ENTRY_REFS = [
   "nevent1qgsr3lnm9dfpteq209tgjgzc3dvgd43p0fp4wrpgcz3jud43yghfq8sqyp80whqxxnuez4r8eyc8y6fas88l3e9krst5aqetkqk074qtdug3yvr3rnl",
+  "nevent1qgstdp3mrrh5ttnvjjvx6psufgwjf5l8c6hxw7y5ej4r4sy2p8s4vmqqyrk0fejvj7kce2qae3ldyn865dsqsxj0tqxmllf3d34d0tzkysfv55udxp5",
 ];
 
 function decodeEventId(ref: string): string {
