@@ -24,7 +24,7 @@ export function Author({ pubkey, size = 28 }: { pubkey: string; size?: number })
         style={{ width: size, height: size }}
       />
       <span
-        className={`truncate font-medium text-neutral-200 ${size <= 22 ? "text-xs" : "text-sm"}`}
+        className={`truncate font-medium text-neutral-200 ${size <= 20 ? "text-[11px]" : size <= 22 ? "text-xs" : "text-sm"}`}
       >
         {name}
       </span>
