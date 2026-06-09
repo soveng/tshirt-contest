@@ -13,7 +13,7 @@ import {
   RATING_NAMESPACE,
 } from "./config";
 import { scoreSubmissions } from "./ratings";
-import { toSubmission } from "./submissions";
+import { hasVideo, toSubmission } from "./submissions";
 import type { Submission, SubmissionScore } from "./types";
 
 export interface RankedSubmission {
@@ -60,6 +60,7 @@ export function useSubmissions(): Submission[] {
     return (notes ?? [])
       .filter((note) => !EXCLUDED_AUTHOR_PUBKEYS.has(note.pubkey))
       .filter((note) => !EXCLUDED_ENTRY_IDS.has(note.id))
+      .filter((note) => !hasVideo(note))
       .map(toSubmission)
       .filter((submission) => submission.images.length > 0)
       .sort((a, b) => b.createdAt - a.createdAt);
