@@ -1,16 +1,25 @@
 import type { NostrEvent } from "nostr-tools";
 import type { Submission } from "./types";
 
-const IMAGE_URL = /https?:\/\/[^\s"'<>]+\.(?:png|jpe?g|gif|webp|avif)(?:\?[^\s"'<>]*)?/gi;
+// Static (non-animated) image formats we display. Gifs are intentionally excluded.
+const IMAGE_URL = /https?:\/\/[^\s"'<>]+\.(?:png|jpe?g|webp|avif)(?:\?[^\s"'<>]*)?/gi;
 
-/** Pull image URLs from NIP-92 imeta tags and from the note content */
+// Any linked media, including gifs — used only to scrub raw URLs from note text.
+const MEDIA_URL = /https?:\/\/[^\s"'<>]+\.(?:png|jpe?g|gif|webp|avif)(?:\?[^\s"'<>]*)?/gi;
+
+const GIF_URL = /\.gif(?:[?#]|$)/i;
+
+/** Pull displayable (non-gif) image URLs from NIP-92 imeta tags and note content */
 function extractImages(event: NostrEvent): string[] {
   const urls = new Set<string>();
 
   for (const tag of event.tags) {
     if (tag[0] === "imeta") {
       for (const part of tag.slice(1)) {
-        if (part.startsWith("url ")) urls.add(part.slice(4).trim());
+        if (part.startsWith("url ")) {
+          const url = part.slice(4).trim();
+          if (!GIF_URL.test(url)) urls.add(url);
+        }
       }
     }
     if (tag[0] === "r" && tag[1] && new RegExp(IMAGE_URL.source, "i").test(tag[1])) urls.add(tag[1]);
@@ -30,7 +39,7 @@ function cleanContent(content: string, imageUrls: readonly string[]): string {
     text = text.replaceAll(url, "");
   }
 
-  text = text.replace(new RegExp(IMAGE_URL.source, IMAGE_URL.flags), "");
+  text = text.replace(new RegExp(MEDIA_URL.source, MEDIA_URL.flags), "");
 
   text = text.replace(
     /!\[[^\]]*\]\(\s*https?:\/\/[^\s"'<>)]+\.(?:png|jpe?g|gif|webp|avif)(?:\?[^\s"'<>)]*)?\s*\)/gi,
