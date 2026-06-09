@@ -41,6 +41,14 @@ export const EXTRA_ENTRY_REFS = [
   "nevent1qyv8wumn8ghj7un9d3shjtnywfjkzmtfw35zuar09uq32amnwvaz7tmjv4kxz7fwv3sk6atn9e5k7tcpzemhxue69uhhyetvv9ujumt0wd68ytnsw43z7qghwaehxw309aex2mrp0yh8qunfd4skctnwv46z7qgewaehxw309aex2mrp0yhx6mmddaehgu3wwp5ku6e0qyfhwumn8ghj7ur4wfcxcetsv9njuetn9uqsuamnwvaz7tmwdaejumr0dshsz9nhwden5te0wfjkccte9ejxjar5duh8qatz9uqzp67pfc3gn45mhzdlkl47wllz2yqmfep98z9xyfcsl9jjhas4d6ftmnca3s",
 ];
 
+/**
+ * Notes to hide even if the official account acknowledged them by mistake.
+ * Add as nevent or note id.
+ */
+export const EXCLUDED_ENTRY_REFS = [
+  "nevent1qgsr3lnm9dfpteq209tgjgzc3dvgd43p0fp4wrpgcz3jud43yghfq8sqyp80whqxxnuez4r8eyc8y6fas88l3e9krst5aqetkqk074qtdug3yvr3rnl",
+];
+
 function decodeEventId(ref: string): string {
   const decoded = nip19.decode(ref);
   if (decoded.type === "nevent") return decoded.data.id;
@@ -49,6 +57,7 @@ function decodeEventId(ref: string): string {
 }
 
 export const EXTRA_ENTRY_IDS = EXTRA_ENTRY_REFS.map(decodeEventId);
+export const EXCLUDED_ENTRY_IDS = new Set(EXCLUDED_ENTRY_REFS.map(decodeEventId));
 
 /** Only look at activity from when the contest opened */
 export const CONTEST_SINCE = Math.floor(new Date("2026-05-26T00:00:00Z").getTime() / 1000);

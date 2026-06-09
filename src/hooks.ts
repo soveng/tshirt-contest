@@ -3,6 +3,7 @@ import { use$ } from "applesauce-react/hooks";
 
 import { accounts, eventStore } from "./nostr";
 import {
+  EXCLUDED_ENTRY_IDS,
   EXTRA_ENTRY_IDS,
   JUDGE_PUBKEYS,
   JUDGE_SET,
@@ -42,8 +43,9 @@ function useEntryIds(): string[] {
     const ids = new Set<string>(EXTRA_ENTRY_IDS);
     for (const ack of acks ?? []) {
       const id = acknowledgedSubmissionId(ack);
-      if (id) ids.add(id);
+      if (id && !EXCLUDED_ENTRY_IDS.has(id)) ids.add(id);
     }
+    for (const id of EXCLUDED_ENTRY_IDS) ids.delete(id);
     return [...ids];
   }, [acks]);
 }
