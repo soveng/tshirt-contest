@@ -19,7 +19,7 @@ function shuffle<T>(items: T[]): T[] {
 export function GalleryPage() {
   const submissions = useSubmissions();
   const loading = useEntriesLoading();
-  const [sort, setSort] = useState<SortOption>("random");
+  const [sort, setSort] = useState<SortOption>("newest");
   const [seed, setSeed] = useState(0);
 
   const ordered = useMemo(() => {
