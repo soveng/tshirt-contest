@@ -85,6 +85,12 @@ export const OFFICIAL_PUBKEY = decodeNpub(OFFICIAL_NPUB);
 /** Fast lookup for "is this pubkey a judge" */
 export const JUDGE_SET = new Set(JUDGE_PUBKEYS);
 
+/** Authors whose own posts never count as entries (official account + organizer) */
+export const EXCLUDED_AUTHOR_PUBKEYS = new Set([
+  OFFICIAL_PUBKEY,
+  decodeNpub("npub1dergggklka99wwrs92yz8wdjs952h2ux2ha2ed598ngwu9w7a6fsh9xzpc"),
+]);
+
 export const CONTEST = {
   title: "SEC-08 T-Shirt Design Contest",
   deadline: "June 15",

@@ -7,13 +7,13 @@ import { ExtensionAccount, registerCommonAccountTypes } from "applesauce-account
 import {
   CONTEST_SINCE,
   EXTRA_ENTRY_IDS,
+  HASHTAG,
   JUDGE_PUBKEYS,
   LOOKUP_RELAYS,
   OFFICIAL_PUBKEY,
   RATING_NAMESPACE,
   RELAYS,
 } from "./config";
-import { acknowledgedSubmissionId } from "./submissions";
 
 /** Single shared event store for the whole app */
 export const eventStore = new EventStore();
@@ -73,39 +73,28 @@ export function logout(): void {
 }
 
 /**
- * Subscribe to contest entries and pipe them into the store:
- * - acknowledgement notes from the official account confirm which notes are entries
- * - each acknowledged entry note is loaded on demand
+ * Subscribe to candidate contest entries and pipe them into the store:
+ * - notes that tag the official account, or
+ * - notes carrying the contest hashtag
+ * Image and author filtering happens when entries are read (see useSubmissions).
  */
 export function startEntryIngest(): () => void {
-  const requested = new Set<string>();
-  const entryLoaders = new Map<string, { unsubscribe(): void }>();
-
-  const loadEntry = (id: string) => {
-    if (requested.has(id)) return;
-    requested.add(id);
-    entryLoaders.set(
-      id,
-      pool.request(RELAYS, { ids: [id] }).subscribe((entry) => eventStore.add(entry)),
-    );
-  };
-
-  // Always load the manually allowlisted entries
-  for (const id of EXTRA_ENTRY_IDS) loadEntry(id);
-
-  const acks = pool
-    .subscription(RELAYS, { kinds: [1], authors: [OFFICIAL_PUBKEY], since: CONTEST_SINCE })
+  const entries = pool
+    .subscription(RELAYS, [
+      { kinds: [1], "#p": [OFFICIAL_PUBKEY], since: CONTEST_SINCE },
+      { kinds: [1], "#t": [HASHTAG], since: CONTEST_SINCE },
+    ])
     .pipe(onlyEvents())
-    .subscribe((event) => {
-      eventStore.add(event);
-      const id = acknowledgedSubmissionId(event);
-      // Fetch the entry note from the contest relays (it isn't on the lookup relays)
-      if (id) loadEntry(id);
-    });
+    .subscribe((event) => eventStore.add(event));
+
+  // Always load the manually allowlisted entries (they may predate the contest window)
+  const loaders = EXTRA_ENTRY_IDS.map((id) =>
+    pool.request(RELAYS, { ids: [id] }).subscribe((entry) => eventStore.add(entry)),
+  );
 
   return () => {
-    acks.unsubscribe();
-    for (const sub of entryLoaders.values()) sub.unsubscribe();
+    entries.unsubscribe();
+    for (const loader of loaders) loader.unsubscribe();
   };
 }
 

@@ -3,15 +3,17 @@ import { use$ } from "applesauce-react/hooks";
 
 import { accounts, eventStore } from "./nostr";
 import {
+  EXCLUDED_AUTHOR_PUBKEYS,
   EXCLUDED_ENTRY_IDS,
   EXTRA_ENTRY_IDS,
+  HASHTAG,
   JUDGE_PUBKEYS,
   JUDGE_SET,
   OFFICIAL_PUBKEY,
   RATING_NAMESPACE,
 } from "./config";
 import { scoreSubmissions } from "./ratings";
-import { acknowledgedSubmissionId, toSubmission } from "./submissions";
+import { toSubmission } from "./submissions";
 import type { Submission, SubmissionScore } from "./types";
 
 export interface RankedSubmission {
@@ -36,46 +38,37 @@ export function useProfile(pubkey: string | undefined) {
   return use$(() => (pubkey ? eventStore.profile(pubkey) : undefined), [pubkey]);
 }
 
-function useEntryIds(): string[] {
-  const acks = use$(() => eventStore.timeline({ kinds: [1], authors: [OFFICIAL_PUBKEY] }), []);
-
-  return useMemo(() => {
-    const ids = new Set<string>(EXTRA_ENTRY_IDS);
-    for (const ack of acks ?? []) {
-      const id = acknowledgedSubmissionId(ack);
-      if (id && !EXCLUDED_ENTRY_IDS.has(id)) ids.add(id);
-    }
-    for (const id of EXCLUDED_ENTRY_IDS) ids.delete(id);
-    return [...ids];
-  }, [acks]);
-}
-
-/** Confirmed contest entries, newest first. No ratings — for the public gallery. */
+/**
+ * Confirmed contest entries, newest first. No ratings — for the public gallery.
+ *
+ * An entry is any note that tags the official account or carries the contest
+ * hashtag (plus the manual allowlist), as long as it has an image and is not
+ * authored by an excluded account.
+ */
 export function useSubmissions(): Submission[] {
-  const entryIds = useEntryIds();
-
   const notes = use$(
-    () => (entryIds.length ? eventStore.timeline({ ids: entryIds }) : undefined),
-    [entryIds.join(",")],
+    () =>
+      eventStore.timeline([
+        { kinds: [1], "#p": [OFFICIAL_PUBKEY] },
+        { kinds: [1], "#t": [HASHTAG] },
+        ...(EXTRA_ENTRY_IDS.length ? [{ ids: EXTRA_ENTRY_IDS }] : []),
+      ]),
+    [],
   );
 
   return useMemo(() => {
     return (notes ?? [])
-      .filter((note) => note.pubkey !== OFFICIAL_PUBKEY)
+      .filter((note) => !EXCLUDED_AUTHOR_PUBKEYS.has(note.pubkey))
+      .filter((note) => !EXCLUDED_ENTRY_IDS.has(note.id))
       .map(toSubmission)
+      .filter((submission) => submission.images.length > 0)
       .sort((a, b) => b.createdAt - a.createdAt);
   }, [notes]);
 }
 
 /** True while entry notes are still syncing from relays. */
 export function useEntriesLoading(): boolean {
-  const entryIds = useEntryIds();
   const submissions = useSubmissions();
-  const acks = use$(() => eventStore.timeline({ kinds: [1], authors: [OFFICIAL_PUBKEY] }), []);
-  const notes = use$(
-    () => (entryIds.length ? eventStore.timeline({ ids: entryIds }) : undefined),
-    [entryIds.join(",")],
-  );
   const [deadlinePassed, setDeadlinePassed] = useState(false);
 
   useEffect(() => {
@@ -84,15 +77,7 @@ export function useEntriesLoading(): boolean {
   }, []);
 
   if (submissions.length > 0) return false;
-  if (deadlinePassed) return false;
-
-  const loadedCount = notes?.length ?? 0;
-  const ackCount = acks?.length ?? 0;
-
-  if (entryIds.length > 0 && loadedCount < entryIds.length) return true;
-  if (loadedCount === 0 && ackCount === 0) return true;
-
-  return false;
+  return !deadlinePassed;
 }
 
 /** Entries with judge scores for the judging page. */
