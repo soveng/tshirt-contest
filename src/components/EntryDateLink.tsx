@@ -22,7 +22,7 @@ export function EntryDateLink({
 
   return (
     <a
-      href={`https://njump.me/${nevent}`}
+      href={`https://njump.to/${nevent}`}
       target="_blank"
       rel="noreferrer"
       className={

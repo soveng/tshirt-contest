@@ -13,7 +13,7 @@ function pubkeyFromMention(decoded: Mention["decoded"]): string | undefined {
 function NostrMention({ node }: { node: Mention }) {
   const pubkey = pubkeyFromMention(node.decoded);
   const profile = useProfile(pubkey);
-  const href = `https://njump.me/${node.encoded}`;
+  const href = `https://njump.to/${node.encoded}`;
 
   if (pubkey) {
     const name = getDisplayName(profile) || `${pubkey.slice(0, 8)}…`;
