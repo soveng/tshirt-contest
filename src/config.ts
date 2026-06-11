@@ -3,6 +3,9 @@ import { nip19 } from "nostr-tools";
 /** The hashtag designers use to submit ("#SovEng" lowercased for the "t" tag) */
 export const HASHTAG = "soveng";
 
+/** `#t` tag values to match — relay filters are case-sensitive */
+export const HASHTAG_TAGS = ["soveng", "SovEng", "SOVENG"];
+
 /** Relays we read submissions from and publish ratings to */
 export const RELAYS = [
   "wss://relay.damus.io/",
@@ -39,6 +42,7 @@ export const EXTRA_ENTRY_REFS = [
   "nevent1qqszg2xejhjp3gcgz5hlfd7w2hpw94d4mffj2xgwxjn3dr5lzjx83hqqqdwtd",
   "nevent1qqspf4t46uvyvhace5d2tgulu869sedpy52undje0tmz8c5whjm5lss8z9xnw",
   "nevent1qyv8wumn8ghj7un9d3shjtnywfjkzmtfw35zuar09uq32amnwvaz7tmjv4kxz7fwv3sk6atn9e5k7tcpzemhxue69uhhyetvv9ujumt0wd68ytnsw43z7qghwaehxw309aex2mrp0yh8qunfd4skctnwv46z7qgewaehxw309aex2mrp0yhx6mmddaehgu3wwp5ku6e0qyfhwumn8ghj7ur4wfcxcetsv9njuetn9uqsuamnwvaz7tmwdaejumr0dshsz9nhwden5te0wfjkccte9ejxjar5duh8qatz9uqzp67pfc3gn45mhzdlkl47wllz2yqmfep98z9xyfcsl9jjhas4d6ftmnca3s",
+  "nevent1qqszsgxda3e40f4sqarw05cmnedzlvwm89l5pdxd9tcd0jh8mlxsk6gpr9mhxue69uhhqun9d45h2mfwwpexjmtpdshxuet59upzqx9kszxf8zthrud6m8gwtzc9dpgz5766wk6w775yenke5n49kchuqvzqqqqqqykz3dgj",
 ];
 
 /**
@@ -97,6 +101,23 @@ export const EXCLUDED_AUTHOR_PUBKEYS = new Set([
   OFFICIAL_PUBKEY,
   decodeNpub("npub1dergggklka99wwrs92yz8wdjs952h2ux2ha2ed598ngwu9w7a6fsh9xzpc"),
 ]);
+
+/** Relay subscription filters for discovering candidate entries */
+export function entryIngestFilters(since: number) {
+  return [
+    { kinds: [1], "#p": [OFFICIAL_PUBKEY], since },
+    ...HASHTAG_TAGS.map((tag) => ({ kinds: [1], "#t": [tag], since })),
+  ];
+}
+
+/** Event-store filters for reading confirmed entries */
+export function entryTimelineFilters() {
+  return [
+    { kinds: [1], "#p": [OFFICIAL_PUBKEY] },
+    ...HASHTAG_TAGS.map((tag) => ({ kinds: [1], "#t": [tag] })),
+    ...(EXTRA_ENTRY_IDS.length ? [{ ids: EXTRA_ENTRY_IDS }] : []),
+  ];
+}
 
 export const CONTEST = {
   title: "SEC-08 T-Shirt Design Contest",

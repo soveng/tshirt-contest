@@ -3,13 +3,11 @@ import { use$ } from "applesauce-react/hooks";
 
 import { accounts, eventStore } from "./nostr";
 import {
+  entryTimelineFilters,
   EXCLUDED_AUTHOR_PUBKEYS,
   EXCLUDED_ENTRY_IDS,
-  EXTRA_ENTRY_IDS,
-  HASHTAG,
   JUDGE_PUBKEYS,
   JUDGE_SET,
-  OFFICIAL_PUBKEY,
   RATING_NAMESPACE,
 } from "./config";
 import { scoreSubmissions } from "./ratings";
@@ -47,12 +45,7 @@ export function useProfile(pubkey: string | undefined) {
  */
 export function useSubmissions(): Submission[] {
   const notes = use$(
-    () =>
-      eventStore.timeline([
-        { kinds: [1], "#p": [OFFICIAL_PUBKEY] },
-        { kinds: [1], "#t": [HASHTAG] },
-        ...(EXTRA_ENTRY_IDS.length ? [{ ids: EXTRA_ENTRY_IDS }] : []),
-      ]),
+    () => eventStore.timeline(entryTimelineFilters()),
     [],
   );
 
