@@ -2,6 +2,7 @@ import { getDisplayName } from "applesauce-core/helpers";
 import type { Mention } from "applesauce-content/nast";
 import { useRenderedContent, type ComponentMap } from "applesauce-react/hooks";
 
+import { SOVENG_TAG_URL } from "../config";
 import { useProfile } from "../hooks";
 
 function pubkeyFromMention(decoded: Mention["decoded"]): string | undefined {
@@ -59,7 +60,7 @@ const components: ComponentMap = {
   mention: ({ node }) => <NostrMention node={node} />,
   hashtag: ({ node }) => {
     const tag = node.hashtag;
-    const href = tag === "soveng" ? "https://ants.sh/t/SovEng" : `https://ants.sh/t/${tag}`;
+    const href = tag === "soveng" ? SOVENG_TAG_URL : `https://ants.sh/t/${tag}`;
     return (
       <a
         href={href}

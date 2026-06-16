@@ -1,3 +1,5 @@
+import { SOVENG_TAG_URL } from "../config";
+
 export function EmptyState() {
   return (
     <div className="page-shell max-w-xl py-24">
@@ -6,7 +8,7 @@ export function EmptyState() {
       <p className="mt-2 text-sm text-muted">
         Post a mockup on Nostr with{" "}
         <a
-          href="https://ants.sh/t/SovEng"
+          href={SOVENG_TAG_URL}
           target="_blank"
           rel="noreferrer"
           className="font-mono text-neutral-300 underline-offset-4 hover:text-flame hover:underline"

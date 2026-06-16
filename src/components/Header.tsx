@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { CONTEST } from "../config";
+import { CONTEST, SOVENG_TAG_URL } from "../config";
 import { JudgeLoginLink } from "./JudgeLoginLink";
 import { LoginButton } from "./LoginButton";
 import { SortMenu, type SortOption } from "./SortMenu";
@@ -12,8 +12,6 @@ const headerButton =
   "inline-flex items-center rounded-lg px-2.5 py-2 text-sm font-semibold leading-none transition-transform hover:scale-105 sm:px-3.5";
 
 const primaryButton = `${headerButton} bg-flame text-ink`;
-
-const SOVENG_TAG_URL = "https://ants.sh/t/SovEng";
 
 function HeaderTitle({ mode }: { mode: "gallery" | "judges" | "results" }) {
   const label =
