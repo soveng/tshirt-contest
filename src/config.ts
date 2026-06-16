@@ -73,14 +73,16 @@ export const EXCLUDED_ENTRY_IDS = new Set(EXCLUDED_ENTRY_REFS.map(decodeEventId)
 /** Only look at activity from when the contest opened */
 export const CONTEST_SINCE = Math.floor(new Date("2026-05-26T00:00:00Z").getTime() / 1000);
 
-/** Last second of the submission deadline (end of June 15, UTC) */
-export const CONTEST_UNTIL = Math.floor(new Date("2026-06-15T23:59:59Z").getTime() / 1000);
+/** Last second of the submission deadline (end of June 15 in UTC−12) */
+export const CONTEST_UNTIL = Math.floor(new Date("2026-06-16T11:59:59Z").getTime() / 1000);
 
 const CONTEST_SINCE_DATE = "2026-05-26";
-const CONTEST_UNTIL_DATE = "2026-06-15";
+const CONTEST_UNTIL_DATE = "2026-06-16";
 
 /** #SovEng on ants.sh, scoped to the contest window */
-export const SOVENG_TAG_URL = `https://ants.sh/t/SovEng since:${CONTEST_SINCE_DATE} until:${CONTEST_UNTIL_DATE}`;
+export const SOVENG_TAG_URL = `https://ants.sh/?q=${encodeURIComponent(
+  `#SovEng since:${CONTEST_SINCE_DATE} until:${CONTEST_UNTIL_DATE}`,
+).replace(/%20/g, "+")}`;
 
 /** The five judges, by npub */
 export const JUDGE_NPUBS = [
