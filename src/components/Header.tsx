@@ -50,7 +50,7 @@ function SubmitDesignButton() {
 function MedalIcon({ size = 15 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M7 2v5.8L5.2 10 6.8 20h4.4V2H7zm10 0v18h4.4L19.8 10 18 7.8V2h-1z" />
+      <path d="M7 2v5.8L5.2 10 6.8 20h4.4V2H7zm11 0v5.8l1.8 2.2-1.6 10h-4.4V2h4.2z" />
       <circle cx="12" cy="14" r="5" />
     </svg>
   );
