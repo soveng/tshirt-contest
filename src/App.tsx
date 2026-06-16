@@ -9,10 +9,14 @@ const JudgesPage = lazy(() =>
   import("./pages/JudgesPage").then((m) => ({ default: m.JudgesPage })),
 );
 
-function JudgesFallback() {
+const ResultsPage = lazy(() =>
+  import("./pages/ResultsPage").then((m) => ({ default: m.ResultsPage })),
+);
+
+function PageFallback({ label }: { label: string }) {
   return (
     <div className="page-shell flex min-h-[50vh] items-center justify-center">
-      <p className="font-mono text-sm text-muted">Loading judging…</p>
+      <p className="font-mono text-sm text-muted">Loading {label}…</p>
     </div>
   );
 }
@@ -26,8 +30,16 @@ export default function App() {
           <Route
             path="/judges"
             element={
-              <Suspense fallback={<JudgesFallback />}>
+              <Suspense fallback={<PageFallback label="judging" />}>
                 <JudgesPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/results"
+            element={
+              <Suspense fallback={<PageFallback label="results" />}>
+                <ResultsPage />
               </Suspense>
             }
           />
