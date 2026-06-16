@@ -16,8 +16,9 @@ const primaryButton = `${headerButton} bg-flame text-ink`;
 const SOVENG_TAG_URL = "https://ants.sh/t/SovEng";
 const SOVENG_APPLY_URL = "https://sovereignengineering.io/#apply";
 
-function HeaderTitle({ mode }: { mode: "gallery" | "judges" }) {
-  const label = mode === "gallery" ? "Gallery" : "Judging";
+function HeaderTitle({ mode }: { mode: "gallery" | "judges" | "results" }) {
+  const label =
+    mode === "gallery" ? "Gallery" : mode === "judges" ? "Judging" : "Results";
 
   return (
     <span className="min-w-0 truncate font-display text-base font-bold tracking-tight text-neutral-50 sm:text-lg">
@@ -61,11 +62,21 @@ function SubmissionsLink({ count }: { count: number }) {
   );
 }
 
+function RatedCount({ count }: { count: number }) {
+  return (
+    <span className="font-mono text-xs text-muted sm:text-sm">
+      {count} rated
+    </span>
+  );
+}
+
 function HeaderMeta({
+  mode,
   submissionCount,
   sort,
   onSortChange,
 }: {
+  mode: "gallery" | "judges" | "results";
   submissionCount: number;
   sort?: SortOption;
   onSortChange?: (next: SortOption) => void;
@@ -73,7 +84,11 @@ function HeaderMeta({
   return (
     <div className="flex items-center gap-3 sm:gap-4">
       {sort && onSortChange && <SortMenu value={sort} onChange={onSortChange} />}
-      <SubmissionsLink count={submissionCount} />
+      {mode === "results" ? (
+        <RatedCount count={submissionCount} />
+      ) : (
+        <SubmissionsLink count={submissionCount} />
+      )}
     </div>
   );
 }
@@ -84,7 +99,7 @@ export function Header({
   sort,
   onSortChange,
 }: {
-  mode: "gallery" | "judges";
+  mode: "gallery" | "judges" | "results";
   submissionCount: number;
   sort?: SortOption;
   onSortChange?: (next: SortOption) => void;
@@ -105,34 +120,79 @@ export function Header({
             </a>
             <HeaderTitle mode={mode} />
             <div className="hidden min-w-0 items-center gap-3 border-l border-edge/70 pl-3 sm:flex sm:gap-4 sm:pl-4">
-              <HeaderMeta submissionCount={submissionCount} sort={sort} onSortChange={onSortChange} />
+              <HeaderMeta
+                mode={mode}
+                submissionCount={submissionCount}
+                sort={sort}
+                onSortChange={onSortChange}
+              />
             </div>
           </div>
 
           <div className="flex min-w-0 shrink items-center gap-1.5 sm:gap-3">
             {mode === "gallery" ? (
               <>
+                <Link to="/results" className={`${navLink} hidden sm:inline`}>
+                  Results
+                </Link>
                 <JudgeLoginLink />
                 <SubmitDesignButton />
+              </>
+            ) : mode === "judges" ? (
+              <>
+                <Link to="/" className={`${navLink} hidden sm:inline`}>
+                  Gallery
+                </Link>
+                <Link to="/results" className={`${navLink} hidden sm:inline`}>
+                  Results
+                </Link>
+                <LoginButton compact />
               </>
             ) : (
               <>
                 <Link to="/" className={`${navLink} hidden sm:inline`}>
                   Gallery
                 </Link>
-                <LoginButton compact />
+                <Link to="/judges" className={`${navLink} hidden sm:inline`}>
+                  Judging
+                </Link>
               </>
             )}
           </div>
         </div>
 
         <div className="mt-2 flex items-center gap-3 border-t border-edge/50 pt-2 sm:hidden">
-          {mode === "judges" && (
-            <Link to="/" className={navLink}>
-              Gallery
+          {mode === "gallery" && (
+            <Link to="/results" className={navLink}>
+              Results
             </Link>
           )}
-          <HeaderMeta submissionCount={submissionCount} sort={sort} onSortChange={onSortChange} />
+          {mode === "judges" && (
+            <>
+              <Link to="/" className={navLink}>
+                Gallery
+              </Link>
+              <Link to="/results" className={navLink}>
+                Results
+              </Link>
+            </>
+          )}
+          {mode === "results" && (
+            <>
+              <Link to="/" className={navLink}>
+                Gallery
+              </Link>
+              <Link to="/judges" className={navLink}>
+                Judging
+              </Link>
+            </>
+          )}
+          <HeaderMeta
+            mode={mode}
+            submissionCount={submissionCount}
+            sort={sort}
+            onSortChange={onSortChange}
+          />
         </div>
       </div>
     </header>
