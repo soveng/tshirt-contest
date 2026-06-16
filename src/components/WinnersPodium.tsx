@@ -1,5 +1,6 @@
 import type { RankedSubmission } from "../hooks";
 import { Author } from "./Author";
+import { EntryCarousel, useEntryCarousel } from "./EntryCarousel";
 import { EntryDateLink } from "./EntryDateLink";
 import { ResultsScore } from "./ResultsScore";
 
@@ -11,18 +12,27 @@ function WinnerCard({
   featured?: boolean;
 }) {
   const { submission, score, rank } = item;
-  const image = submission.images[0];
+  const carousel = useEntryCarousel(submission);
 
   return (
     <article
+      ref={carousel.rootRef}
       className={`overflow-hidden rounded-xl border border-edge bg-panel-2 ${
         featured ? "sm:scale-[1.03] sm:shadow-lg sm:shadow-flame/5" : ""
       }`}
     >
       <div className="relative bg-ink">
-        <img src={image} alt="" className="block w-full object-cover" />
+        <EntryCarousel
+          submission={submission}
+          active={carousel.active}
+          image={carousel.image}
+          hasCarousel={carousel.hasCarousel}
+          showSlide={carousel.showSlide}
+          imageClassName="block w-full object-cover"
+          tapToNavigate
+        />
         <span
-          className="absolute left-3 top-3 rounded-full bg-flame px-2.5 py-1 font-mono text-xs font-semibold text-ink"
+          className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-flame px-2.5 py-1 font-mono text-xs font-semibold text-ink"
         >
           #{rank}
         </span>
