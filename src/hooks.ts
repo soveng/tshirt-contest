@@ -74,23 +74,76 @@ export function useEntriesLoading(): boolean {
   return !deadlinePassed;
 }
 
-/** Entries with judge scores for the judging page. */
-export function useRankedSubmissions(): RankedSubmission[] {
-  const submissions = useSubmissions();
+const EMPTY_SCORE: SubmissionScore = { average: null, count: 0, byJudge: {} };
 
+/** Per-submission judge scores from kind-1985 label events. */
+export function useSubmissionScores(): Map<string, SubmissionScore> {
   const ratings = use$(
     () => eventStore.timeline({ kinds: [1985], authors: JUDGE_PUBKEYS, "#L": [RATING_NAMESPACE] }),
     [],
   );
 
-  return useMemo(() => {
-    const scores = scoreSubmissions(ratings ?? []);
-    const empty: SubmissionScore = { average: null, count: 0, byJudge: {} };
+  return useMemo(() => scoreSubmissions(ratings ?? []), [ratings]);
+}
 
-    return submissions.map((submission, index) => ({
+/** Sort rated entries by average with competition ranks (ties share rank). */
+export function sortLeaderboard(
+  submissions: Submission[],
+  scores: Map<string, SubmissionScore>,
+): RankedSubmission[] {
+  const rated = submissions
+    .map((submission) => ({
       submission,
-      score: scores.get(submission.id) ?? empty,
-      rank: index + 1,
-    }));
-  }, [submissions, ratings]);
+      score: scores.get(submission.id) ?? EMPTY_SCORE,
+    }))
+    .filter((item) => item.score.average !== null);
+
+  rated.sort((a, b) => {
+    const avgDiff = b.score.average! - a.score.average!;
+    if (avgDiff !== 0) return avgDiff;
+    const countDiff = b.score.count - a.score.count;
+    if (countDiff !== 0) return countDiff;
+    return b.submission.createdAt - a.submission.createdAt;
+  });
+
+  let rank = 0;
+  let prevAverage: number | null = null;
+  return rated.map((item, index) => {
+    if (item.score.average !== prevAverage) {
+      rank = index + 1;
+      prevAverage = item.score.average;
+    }
+    return { ...item, rank };
+  });
+}
+
+/** Rated entries sorted by score for the results page. */
+export function useLeaderboard(): { leaderboard: RankedSubmission[]; winners: RankedSubmission[]; rest: RankedSubmission[] } {
+  const submissions = useSubmissions();
+  const scores = useSubmissionScores();
+
+  return useMemo(() => {
+    const leaderboard = sortLeaderboard(submissions, scores);
+    return {
+      leaderboard,
+      winners: leaderboard.slice(0, 3),
+      rest: leaderboard.slice(3),
+    };
+  }, [submissions, scores]);
+}
+
+/** Entries with judge scores for the judging page (newest-first order). */
+export function useRankedSubmissions(): RankedSubmission[] {
+  const submissions = useSubmissions();
+  const scores = useSubmissionScores();
+
+  return useMemo(
+    () =>
+      submissions.map((submission, index) => ({
+        submission,
+        score: scores.get(submission.id) ?? EMPTY_SCORE,
+        rank: index + 1,
+      })),
+    [submissions, scores],
+  );
 }
