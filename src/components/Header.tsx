@@ -47,6 +47,16 @@ function SubmitDesignButton() {
   );
 }
 
+function TrophyIcon({ size = 15 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path
+        d="M19 5h-2V3H7v2H5a2 2 0 00-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.002 5.002 0 0012 18.17a5.002 5.002 0 004.61-3.23C19.08 14.63 21 12.55 21 10V7a2 2 0 00-2-2zM7 10V7h2v3a4 4 0 008 0V7h2v3a4 4 0 01-8 0zM5 19v2h14v-2H5z"
+      />
+    </svg>
+  );
+}
+
 function SubmissionsLink({ count }: { count: number }) {
   return (
     <a
@@ -59,6 +69,21 @@ function SubmissionsLink({ count }: { count: number }) {
       <span className="sm:hidden">{count} ↗</span>
       <span className="hidden sm:inline">{count} submissions ↗</span>
     </a>
+  );
+}
+
+function ResultsLink({ active }: { active?: boolean }) {
+  return (
+    <Link
+      to="/results"
+      className={`inline-flex shrink-0 rounded-md p-0.5 transition-colors hover:text-flame ${
+        active ? "text-flame" : "text-muted"
+      }`}
+      aria-label="Results"
+      aria-current={active ? "page" : undefined}
+    >
+      <TrophyIcon />
+    </Link>
   );
 }
 
@@ -84,11 +109,14 @@ function HeaderMeta({
   return (
     <div className="flex items-center gap-3 sm:gap-4">
       {sort && onSortChange && <SortMenu value={sort} onChange={onSortChange} />}
-      {mode === "results" ? (
-        <RatedCount count={submissionCount} />
-      ) : (
-        <SubmissionsLink count={submissionCount} />
-      )}
+      <div className="flex items-center gap-1.5">
+        {mode === "results" ? (
+          <RatedCount count={submissionCount} />
+        ) : (
+          <SubmissionsLink count={submissionCount} />
+        )}
+        <ResultsLink active={mode === "results"} />
+      </div>
     </div>
   );
 }
@@ -132,9 +160,6 @@ export function Header({
           <div className="flex min-w-0 shrink items-center gap-1.5 sm:gap-3">
             {mode === "gallery" ? (
               <>
-                <Link to="/results" className={`${navLink} hidden sm:inline`}>
-                  Results
-                </Link>
                 <JudgeLoginLink />
                 <SubmitDesignButton />
               </>
@@ -142,9 +167,6 @@ export function Header({
               <>
                 <Link to="/" className={`${navLink} hidden sm:inline`}>
                   Gallery
-                </Link>
-                <Link to="/results" className={`${navLink} hidden sm:inline`}>
-                  Results
                 </Link>
                 <LoginButton compact />
               </>
@@ -162,20 +184,10 @@ export function Header({
         </div>
 
         <div className="mt-2 flex items-center gap-3 border-t border-edge/50 pt-2 sm:hidden">
-          {mode === "gallery" && (
-            <Link to="/results" className={navLink}>
-              Results
-            </Link>
-          )}
           {mode === "judges" && (
-            <>
-              <Link to="/" className={navLink}>
-                Gallery
-              </Link>
-              <Link to="/results" className={navLink}>
-                Results
-              </Link>
-            </>
+            <Link to="/" className={navLink}>
+              Gallery
+            </Link>
           )}
           {mode === "results" && (
             <>
