@@ -47,12 +47,11 @@ function SubmitDesignButton() {
   );
 }
 
-function TrophyIcon({ size = 15 }: { size?: number }) {
+function MedalIcon({ size = 15 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path
-        d="M19 5h-2V3H7v2H5a2 2 0 00-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.002 5.002 0 0012 18.17a5.002 5.002 0 004.61-3.23C19.08 14.63 21 12.55 21 10V7a2 2 0 00-2-2zM7 10V7h2v3a4 4 0 008 0V7h2v3a4 4 0 01-8 0zM5 19v2h14v-2H5z"
-      />
+      <path d="M7 2v5.8L5.2 10 6.8 20h4.4V2H7zm10 0v18h4.4L19.8 10 18 7.8V2h-1z" />
+      <circle cx="12" cy="14" r="5" />
     </svg>
   );
 }
@@ -82,7 +81,7 @@ function ResultsLink({ active }: { active?: boolean }) {
       aria-label="Results"
       aria-current={active ? "page" : undefined}
     >
-      <TrophyIcon />
+      <MedalIcon />
     </Link>
   );
 }
