@@ -14,7 +14,6 @@ const headerButton =
 const primaryButton = `${headerButton} bg-flame text-ink`;
 
 const SOVENG_TAG_URL = "https://ants.sh/t/SovEng";
-const SOVENG_APPLY_URL = "https://sovereignengineering.io/#apply";
 
 function HeaderTitle({ mode }: { mode: "gallery" | "judges" | "results" }) {
   const label =
@@ -22,14 +21,12 @@ function HeaderTitle({ mode }: { mode: "gallery" | "judges" | "results" }) {
 
   return (
     <span className="min-w-0 truncate font-display text-base font-bold tracking-tight text-neutral-50 sm:text-lg">
-      <a
-        href={SOVENG_APPLY_URL}
-        target="_blank"
-        rel="noreferrer"
-        className="text-flame transition-colors hover:text-flame-soft"
+      <Link
+        to="/"
+        className="text-flame no-underline transition-colors hover:text-flame-soft hover:no-underline"
       >
         SEC-08
-      </a>
+      </Link>
       <span className="hidden sm:inline">
         {" "}
         T-Shirt {label}
@@ -138,15 +135,13 @@ export function Header({
       <div className="page-shell py-3 sm:py-3.5">
         <div className="flex items-center justify-between gap-2 sm:gap-4">
           <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
-            <a
-              href="https://sovereignengineering.io/"
-              target="_blank"
-              rel="noreferrer"
-              className="shrink-0 text-neutral-200 transition-colors hover:text-flame"
-              aria-label="Sovereign Engineering"
+            <Link
+              to="/"
+              className="shrink-0 text-neutral-200 no-underline transition-colors hover:text-flame hover:no-underline"
+              aria-label="SEC-08 T-Shirt Contest"
             >
               <img src="/soveng-brandmark.svg" alt="" width={32} height={32} />
-            </a>
+            </Link>
             <HeaderTitle mode={mode} />
             <div className="hidden min-w-0 items-center gap-3 border-l border-edge/70 pl-3 sm:flex sm:gap-4 sm:pl-4">
               <HeaderMeta
