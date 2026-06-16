@@ -75,7 +75,7 @@ function ResultsLink({ active }: { active?: boolean }) {
   return (
     <Link
       to="/results"
-      className={`inline-flex shrink-0 rounded-md p-0.5 transition-colors hover:text-flame ${
+      className={`inline-flex shrink-0 rounded-md p-0.5 no-underline transition-colors hover:text-flame hover:no-underline ${
         active ? "text-flame" : "text-muted"
       }`}
       aria-label="Results"
