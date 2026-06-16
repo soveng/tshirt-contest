@@ -6,6 +6,7 @@ import { ExtensionAccount, registerCommonAccountTypes } from "applesauce-account
 
 import {
   CONTEST_SINCE,
+  CONTEST_UNTIL,
   EXTRA_ENTRY_IDS,
   entryIngestFilters,
   JUDGE_PUBKEYS,
@@ -79,7 +80,7 @@ export function logout(): void {
  */
 export function startEntryIngest(): () => void {
   const entries = pool
-    .subscription(RELAYS, entryIngestFilters(CONTEST_SINCE))
+    .subscription(RELAYS, entryIngestFilters(CONTEST_SINCE, CONTEST_UNTIL))
     .pipe(onlyEvents())
     .subscribe((event) => eventStore.add(event));
 

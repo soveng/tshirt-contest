@@ -73,6 +73,9 @@ export const EXCLUDED_ENTRY_IDS = new Set(EXCLUDED_ENTRY_REFS.map(decodeEventId)
 /** Only look at activity from when the contest opened */
 export const CONTEST_SINCE = Math.floor(new Date("2026-05-26T00:00:00Z").getTime() / 1000);
 
+/** Last second of the submission deadline (end of June 15, UTC) */
+export const CONTEST_UNTIL = Math.floor(new Date("2026-06-15T23:59:59Z").getTime() / 1000);
+
 /** The five judges, by npub */
 export const JUDGE_NPUBS = [
   "npub1dergggklka99wwrs92yz8wdjs952h2ux2ha2ed598ngwu9w7a6fsh9xzpc",
@@ -103,10 +106,10 @@ export const EXCLUDED_AUTHOR_PUBKEYS = new Set([
 ]);
 
 /** Relay subscription filters for discovering candidate entries */
-export function entryIngestFilters(since: number) {
+export function entryIngestFilters(since: number, until: number) {
   return [
-    { kinds: [1], "#p": [OFFICIAL_PUBKEY], since },
-    ...HASHTAG_TAGS.map((tag) => ({ kinds: [1], "#t": [tag], since })),
+    { kinds: [1], "#p": [OFFICIAL_PUBKEY], since, until },
+    ...HASHTAG_TAGS.map((tag) => ({ kinds: [1], "#t": [tag], since, until })),
   ];
 }
 

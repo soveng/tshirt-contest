@@ -3,6 +3,7 @@ import { use$ } from "applesauce-react/hooks";
 
 import { accounts, eventStore } from "./nostr";
 import {
+  CONTEST_UNTIL,
   entryTimelineFilters,
   EXCLUDED_AUTHOR_PUBKEYS,
   EXCLUDED_ENTRY_IDS,
@@ -51,6 +52,7 @@ export function useSubmissions(): Submission[] {
 
   return useMemo(() => {
     return (notes ?? [])
+      .filter((note) => note.created_at <= CONTEST_UNTIL)
       .filter((note) => !EXCLUDED_AUTHOR_PUBKEYS.has(note.pubkey))
       .filter((note) => !EXCLUDED_ENTRY_IDS.has(note.id))
       .filter((note) => !hasVideo(note))
